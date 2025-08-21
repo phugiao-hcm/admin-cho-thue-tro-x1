@@ -8,24 +8,21 @@
           </el-link>
         </div>
         <div>
-          <p class="title2 neutral-900">'room_type.create_room_type</p>
-          <p class="body-medium-regular neutral-500">
-            {{ $route.query.hotelName }}
-          </p>
+          <p class="title2 neutral-900">Tạo phòng mới</p>
         </div>
       </div>
 
       <div class="flex-center wrap">
-        <el-button :loading="ui.isSubmittingDraft" size="small" @click="createDraftRoomType">
-          'room_type.save_draft
+        <el-button :loading="ui.isSubmittingDraft" size="large" @click="createDraftRoomType">
+          Quay lại
         </el-button>
         <el-button
           :loading="ui.isSubmitting"
           type="primary"
-          size="small"
+          size="large"
           @click="preHandleBeforeSubmit"
         >
-          'room_type.submit_for_review
+          Tạo mới
         </el-button>
       </div>
     </div>
@@ -39,23 +36,20 @@
     >
       <div class="custom-flex">
         <div class="flex-left">
-          <p class="body-medium-semi-bold neutral-700">'room_type.room_information</p>
-          <p class="body-small-regular neutral-500">'room_type.setup_basic_room_info</p>
+          <p class="body-medium-semi-bold neutral-700">Thông tin phòng</p>
+          <p class="body-small-regular neutral-500">Thiết lập các thông tin cơ bản của phòng</p>
         </div>
         <div class="flex-right mobile-mt-sm">
           <div class="custom-card">
             <div>
               <p class="body-small-regular neutral-700">
-                'room_type.room_type_name
+                Tiêu đề
                 <span class="secondary-red-600">*</span>
               </p>
             </div>
             <div>
               <el-form-item prop="name">
-                <el-input
-                  :placeholder="'room_type.enter_room_type_name'"
-                  v-model="form.name"
-                ></el-input>
+                <el-input :placeholder="'Nhập tiêu đề'" v-model="form.name"></el-input>
               </el-form-item>
             </div>
           </div>
@@ -64,7 +58,7 @@
             <div class="mt-12px flex-gap">
               <div class="w-100">
                 <p class="body-small-regular neutral-700">
-                  'room_type.number_of_rooms
+                  Số lượng phòng
                   <span class="secondary-red-600">*</span>
                 </p>
                 <el-form-item prop="numOfRoomHotel">
@@ -72,7 +66,7 @@
                     :algin="'left'"
                     :min="1"
                     :max="100"
-                    :placeholder="'room_type.enter_number_of_rooms'"
+                    :placeholder="'Nhập số lượng phòng'"
                     :valueNumber="form.numOfRoomHotel"
                     @onChange="onChangeNumOfRoomHotel"
                   />
@@ -80,7 +74,7 @@
               </div>
               <div class="w-100">
                 <p class="body-small-regular neutral-700">
-                  'room_type.room_size
+                  Diện tích phòng
                   <span class="secondary-red-600">*</span>
                 </p>
                 <el-form-item prop="square">
@@ -89,7 +83,7 @@
                     :suffix="` m²`"
                     :min="0"
                     :max="9999"
-                    :placeholder="'room_type.enter_room_size'"
+                    :placeholder="'Nhập diện tích phòng'"
                     :valueNumber="form.square"
                     @onChange="onChangeSquare"
                   />
@@ -100,7 +94,21 @@
 
           <div class="custom-card">
             <div>
-              <p class="body-small-regular neutral-700">'room_type.bed_type</p>
+              <p class="body-small-regular neutral-700">
+                Địa chỉ
+                <span class="secondary-red-600">*</span>
+              </p>
+            </div>
+            <div>
+              <el-form-item prop="name">
+                <el-input :placeholder="'Nhập địa chỉ'" v-model="form.name"></el-input>
+              </el-form-item>
+            </div>
+          </div>
+
+          <div class="custom-card">
+            <div>
+              <p class="body-small-regular neutral-700">Loại phòng</p>
             </div>
             <div>
               <el-form-item>
@@ -109,7 +117,7 @@
                   class="w-100"
                   v-model="form.roomBedTypeSnList"
                   multiple
-                  :placeholder="'room_type.select_bed_type'"
+                  :placeholder="'Chọn loại phòng'"
                   :loading-text="'message.loading'"
                   :no-data-text="'no_data'"
                 >
@@ -127,7 +135,7 @@
 
           <div class="custom-card">
             <div>
-              <p class="body-small-regular neutral-700">'room_type.room_view</p>
+              <p class="body-small-regular neutral-700">Hướng phòng</p>
             </div>
             <div>
               <el-form-item>
@@ -136,7 +144,7 @@
                   class="w-100"
                   v-model="form.roomViewSnList"
                   multiple
-                  :placeholder="'room_type.select_room_view'"
+                  :placeholder="'Chọn hướng phòng'"
                   :loading-text="'message.loading'"
                   :no-data-text="'no_data'"
                 >
@@ -154,13 +162,13 @@
 
           <div class="custom-card">
             <div>
-              <p class="body-small-regular neutral-700">'room_type.room_description</p>
+              <p class="body-small-regular neutral-700">Mô tả phòng</p>
             </div>
             <div>
               <el-form-item>
                 <el-input
                   type="textarea"
-                  :placeholder="'room_type.enter_brief_description'"
+                  :placeholder="'Nhập mô tả ngắn gọn'"
                   v-model="form.memo"
                   rows="5"
                   maxlength="3000"
@@ -175,20 +183,23 @@
       <!-- ================= TIỆN ÍCH VÀ HÌNH ẢNH ================= -->
       <div class="custom-flex">
         <div class="flex-left">
-          <p class="body-medium-semi-bold neutral-700">'room_type.facilities_and_images</p>
-          <p class="body-small-regular neutral-500">'room_type.add_facilities_and_images</p>
+          <p class="body-medium-semi-bold neutral-700">Tiện ích và hình ảnh</p>
+          <p class="body-small-regular neutral-500">
+            Thêm tiện ích và hình ảnh để khách dễ dàng lựa chọn phòng của bạn
+          </p>
         </div>
         <div class="flex-right mobile-mt-sm">
           <div class="custom-card">
             <div class="flex-between">
-              <p class="body-small-regular neutral-700">'room_type.add_facilities</p>
+              <p class="body-small-regular neutral-700">Thêm tiện ích</p>
 
               <el-select
+                style="width: 30%"
                 v-model="facilitySnSelected"
                 filterable
                 remote
                 reserve-keyword
-                :placeholder="'room_type.select_facilities'"
+                :placeholder="'Chọn tiện ích'"
                 :loading-text="'message.loading'"
                 :no-data-text="'no_data'"
                 :remote-method="searchHotelGroups"
@@ -196,7 +207,11 @@
                 clearable
                 @change="onAddFacilityList"
               >
-                <span slot="prefix" class="icon-search"></span>
+                <template #prefix>
+                  <el-icon>
+                    <Search />
+                  </el-icon>
+                </template>
                 <el-option
                   class="style-staff-hotel-list"
                   v-for="item in facilityList"
@@ -207,6 +222,7 @@
                 </el-option>
               </el-select>
             </div>
+
             <div style="margin-top: 12px">
               <el-form-item>
                 <el-tag
@@ -228,10 +244,12 @@
           <div class="custom-card">
             <div>
               <p class="body-small-regular neutral-500">
-                'room_type.add_room_images
+                Thêm ảnh phòng
                 <span class="secondary-red-600">*</span>
               </p>
-              <p class="body-small-regular neutral-500">'room_type.image_requirements</p>
+              <p class="body-small-regular neutral-500">
+                Ảnh phòng phải có định dạng JPG hoặc PNG, dung lượng không quá 3Mb.
+              </p>
             </div>
           </div>
 
@@ -292,6 +310,10 @@
               </div>
             </el-form-item>
           </div>
+
+          <div class="custom-card">
+            <GoogleMap :center="center" :zoom="12" height="400px" width="100%" />
+          </div>
         </div>
       </div>
       <el-divider></el-divider>
@@ -299,8 +321,10 @@
       <div class="custom-flex">
         <div class="flex-left">
           <el-form-item prop="policyContent">
-            <p class="body-medium-semi-bold neutral-700">'room_type.room_rates</p>
-            <p class="body-small-regular neutral-500">'room_type.setup_room_rates</p>
+            <p class="body-medium-semi-bold neutral-700">Giá phòng</p>
+            <p class="body-small-regular neutral-500">
+              Thiết lập giá phòng phù hợp với mục tiêu kinh doanh của bạn
+            </p>
           </el-form-item>
         </div>
         <div class="flex-right mobile-mt-sm">
@@ -312,7 +336,7 @@
                   <el-card class="box-card" shadow="never">
                     <div slot="header" class="clearfix">
                       <div class="flex-between wrap">
-                        <p class="body-small-regular neutral-700">'room_type.hourly_room_rate</p>
+                        <p class="body-small-regular neutral-700">Giá phòng</p>
                         <p>
                           <el-checkbox v-model="isHourlyBooking" @change="onChangeHourlyBooking">{{
                             'room_type.not_in_business'
@@ -321,74 +345,9 @@
                       </div>
                     </div>
 
-                    <div>
-                      <p class="body-small-regular neutral-700">
-                        'room_type.first_hour_rate
-                        <span class="secondary-red-600">*</span>
-                      </p>
-                      <div class="custom-row-grid">
-                        <div class="w-100">
-                          <el-form-item prop="priceFirstHours">
-                            <InputRoundMoney
-                              :disabled="isDisabledHourly"
-                              :algin="'left'"
-                              :suffix="`'room_type.vnd'`"
-                              :placeholder="'room_type.enter_amount'"
-                              v-model="form.priceFirstHours"
-                            />
-                          </el-form-item>
-                        </div>
-                        <div class="w-100">
-                          <el-form-item prop="firstHours">
-                            <InputNumber
-                              :disabled="isDisabledHourly"
-                              :algin="'left'"
-                              :suffix="` 'room_type.first_hour_s'`"
-                              :min="0"
-                              :max="10"
-                              :placeholder="'room_type.first_hours'"
-                              :valueNumber="form.firstHours"
-                              @onChange="onChangeFirstHours"
-                            />
-                          </el-form-item>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="mt-12px">
-                      <p class="body-small-regular neutral-700">'room_type.additional_hour_rate</p>
-                      <div class="custom-row-grid">
-                        <div class="w-100">
-                          <el-form-item prop="priceAdditionalHours">
-                            <InputRoundMoney
-                              :disabled="isDisabledHourly"
-                              :algin="'left'"
-                              :suffix="`'room_type.vnd'`"
-                              :placeholder="'room_type.enter_amount'"
-                              v-model="form.priceAdditionalHours"
-                            />
-                          </el-form-item>
-                        </div>
-                        <div class="w-100">
-                          <el-form-item prop="additionalHours">
-                            <InputNumberAcceptNull
-                              :disabled="isDisabledHourly"
-                              :algin="'left'"
-                              :suffix="` 'room_type.additional_hour_s'`"
-                              :min="0"
-                              :max="10"
-                              :placeholder="'room_type.additional_hours'"
-                              :valueNumber="form.additionalHours"
-                              @onChange="onChangeAdditionalHours"
-                            />
-                          </el-form-item>
-                        </div>
-                      </div>
-                    </div>
-
                     <div class="mt-12px">
                       <p class="body-small-regular neutral-700 flex-center">
-                        'room_type.maximum_booking_hours
+                        Giá phòng
                         <el-tooltip
                           :content="'room_type.exceed_maximum_hours_note'"
                           placement="bottom-start"
@@ -419,85 +378,40 @@
                         </el-form-item>
                       </div>
                     </div>
-                  </el-card>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- ================= QUA ĐÊM ================= -->
-          <div class="custom-card">
-            <div class="my-8px mobile-mt-sm">
-              <div class="custom-flex">
-                <div class="flex-1">
-                  <el-card class="box-card" shadow="never">
-                    <div slot="header" class="clearfix">
-                      <div class="flex-between wrap">
-                        <p class="body-small-regular neutral-700">'room_type.overnight_room_rate</p>
-                        <p>
-                          <el-checkbox
-                            v-model="isOvernightBooking"
-                            @change="onChangeOvernightBooking"
-                            >'room_type.not_in_business</el-checkbox
-                          >
-                        </p>
-                      </div>
-                    </div>
 
-                    <div>
-                      <p class="body-small-regular neutral-700">
-                        'room_type.price_per_night
-                        <span class="secondary-red-600">*</span>
-                      </p>
-                      <div class="flex-center">
-                        <div class="w-100">
-                          <el-form-item prop="priceOvernight">
-                            <InputRoundMoney
-                              :disabled="isDisabledOvernight"
-                              :algin="'left'"
-                              :suffix="`'room_type.vnd'`"
-                              :placeholder="'room_type.enter_amount'"
-                              v-model="form.priceOvernight"
-                            />
-                          </el-form-item>
+                    <div class="custom-row-grid mt-12px">
+                      <div>
+                        <p class="body-small-regular neutral-700">
+                          Giá điện / 1kw
+                          <span class="secondary-red-600">*</span>
+                        </p>
+                        <div>
+                          <div class="w-100">
+                            <el-form-item prop="priceFirstHours">
+                              <InputRoundMoney
+                                :disabled="isDisabledHourly"
+                                :algin="'left'"
+                                :suffix="'/1kw'"
+                                :placeholder="'Nhập giá điện'"
+                                v-model="form.priceFirstHours"
+                              />
+                            </el-form-item>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </el-card>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- ================= THEO NGÀY ================= -->
-          <div class="custom-card">
-            <div class="my-8px mobile-mt-sm">
-              <div class="custom-flex">
-                <div class="flex-1">
-                  <el-card class="box-card" shadow="never">
-                    <div slot="header" class="clearfix">
-                      <div class="flex-between wrap">
-                        <p class="body-small-regular neutral-700">'room_type.daily_room_rate</p>
-                        <p>
-                          <el-checkbox v-model="isDailyBooking" @change="onChangeDailyBooking">{{
-                            'room_type.not_in_business'
-                          }}</el-checkbox>
+                      <div>
+                        <p class="body-small-regular neutral-700">
+                          Giá nước / 1m³
+                          <span class="secondary-red-600">*</span>
                         </p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <p class="body-small-regular neutral-700">
-                        'room_type.price_per_day
-                        <span class="secondary-red-600">*</span>
-                      </p>
-                      <div class="flex-center">
                         <div class="w-100">
-                          <el-form-item prop="priceOneDay">
+                          <el-form-item prop="firstHours">
                             <InputRoundMoney
-                              :disabled="isDisabledDaily"
+                              :disabled="isDisabledHourly"
                               :algin="'left'"
-                              :suffix="`'room_type.vnd'`"
-                              :placeholder="'room_type.enter_amount'"
-                              v-model="form.priceOneDay"
+                              :suffix="'/1m³'"
+                              :placeholder="'Nhập giá nước'"
+                              v-model="form.priceFirstHours"
                             />
                           </el-form-item>
                         </div>
@@ -517,12 +431,20 @@
 
 <script>
 import HaOffsetSection from '@/components/global/HaOffsetSection.vue'
+import InputNumber from '@/components/global/InputNumber.vue'
+import InputNumberAcceptNull from '@/components/global/InputNumberAcceptNull.vue'
+import InputRoundMoney from '@/components/global/InputRoundMoney.vue'
+import GoogleMap from '@/components/global/GoogleMap.vue'
 
 const timeDebounce = 1200
 export default {
   name: 'CreateRoomType',
   components: {
     HaOffsetSection,
+    InputNumber,
+    InputNumberAcceptNull,
+    InputRoundMoney,
+    GoogleMap,
   },
   data(vm) {
     const validateRequiredImages = (_rule, _value, callback) => {
@@ -580,6 +502,8 @@ export default {
     }
 
     return {
+      center: { lat: 10.762622, lng: 106.660172 }, // Vị trí mặc định (TP.HCM)
+
       ui: {
         isSubmitting: false,
         isSubmittingDraft: false,

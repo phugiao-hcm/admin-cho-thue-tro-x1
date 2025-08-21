@@ -1595,6 +1595,8 @@ body {
     content: '';
     margin-left: 4px;
   }
+
+  margin-bottom: unset !important;
 }
 
 .el-form-item.is-required {
