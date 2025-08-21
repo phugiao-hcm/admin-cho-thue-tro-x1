@@ -13,7 +13,7 @@
       </div>
 
       <div class="flex-center wrap">
-        <el-button :loading="ui.isSubmittingDraft" size="large" @click="createDraftRoomType">
+        <el-button :loading="ui.isSubmittingDraft" size="large" @click="onBack()">
           Quay lại
         </el-button>
         <el-button
@@ -816,6 +816,9 @@ export default {
     async onSubmit() {},
     async uploadFileZip(preSigned, filePath) {},
     async createDraftRoomType() {},
+    onBack() {
+      // router.go(-1)
+    },
   },
 }
 </script>
