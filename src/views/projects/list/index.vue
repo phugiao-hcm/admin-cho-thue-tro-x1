@@ -72,7 +72,7 @@
           </template>
           <template #default="scope">
             <p class="body-small-regular neutral-600">
-              {{ $formatPrice(scope.row.price) }}
+              {{ formatPrice(scope.row.price) }}
             </p>
           </template>
         </el-table-column>
@@ -167,6 +167,8 @@ import { PROJECT_STATUS } from '../const'
 import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
 import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
+import { useUI } from '@/mixins/globalMixin'
+const { formatPrice } = useUI()
 
 const router = useRouter()
 

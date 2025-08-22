@@ -39,7 +39,7 @@
         <div>
           <el-card shadow="never">
             <p class="body-small-regular neutral-500">Giá /1 phòng</p>
-            <p class="body-small-semi-bold neutral-800">{{ $formatPrice(project.price) }}</p>
+            <p class="body-small-semi-bold neutral-800">{{ formatPrice(project.price) }}</p>
           </el-card>
         </div>
         <div>
@@ -132,9 +132,10 @@ import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
 import GoogleMap from '@/components/global/GoogleMap.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { getProjectById, type Project } from './api'
-
 import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
+import { useUI } from '@/mixins/globalMixin'
+const { formatPrice } = useUI()
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
