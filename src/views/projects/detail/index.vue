@@ -1,0 +1,268 @@
+<template>
+  <HaOffsetSection v-loading="ui.isLoading">
+    <div style="margin-bottom: 16px">
+      <div class="custom-header-action">
+        <div class="flex align-baseline">
+          <div>
+            <el-link :underline="false" type="primary" @click="router.go(-1)">
+              <span class="icon-arrow-left-2" style="margin-right: 8px"></span>
+            </el-link>
+          </div>
+          <div class="position-item-2">
+            <p class="title3 neutral-900 text-hidden">Phòng VIP</p>
+          </div>
+          <div>
+            <el-tag :type="setTypeStatus(project.status)">
+              {{ setStatus(project.status) }}
+            </el-tag>
+          </div>
+        </div>
+
+        <div class="flex-center">
+          <el-button type="primary" @click="onDirectProjectEdit">
+            <el-icon><EditPen /></el-icon>
+            <span>Chỉnh sửa</span>
+          </el-button>
+          <el-button type="danger" @click="onDirectProjectEdit">
+            <el-icon><CircleCloseFilled /></el-icon>
+            <span>Ngừng kinh doanh</span>
+          </el-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-container">
+      <div class="mb-sm">
+        <p class="body-medium-semi-bold neutral-800">Thông tin phòng</p>
+      </div>
+      <div class="custom-card">
+        <div>
+          <el-card shadow="never">
+            <p class="body-small-regular neutral-500">Giá /1 phòng</p>
+            <p class="body-small-semi-bold neutral-800">{{ $formatPrice(project.price) }}</p>
+          </el-card>
+        </div>
+        <div>
+          <el-card shadow="never">
+            <p class="body-small-regular neutral-500">Số lượng phòng</p>
+            <p class="body-small-semi-bold neutral-800">10</p>
+          </el-card>
+        </div>
+        <div>
+          <el-card shadow="never">
+            <p class="body-small-regular neutral-500">Diện tích</p>
+            <p class="body-small-semi-bold neutral-800">15m²</p>
+          </el-card>
+        </div>
+        <div>
+          <el-card shadow="never">
+            <p class="body-small-regular neutral-500">Hướng phòng</p>
+            <p class="body-small-semi-bold neutral-800">Chưa thiết lập</p>
+          </el-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-container">
+      <div class="mb-sm">
+        <p class="body-medium-semi-bold neutral-800">Tiện ích</p>
+      </div>
+
+      <div class="custom-card-facilities">
+        <div class="item" v-for="(item, index) in facilities" :key="index">
+          <!-- <el-image :src="formatImage(item.imagePath)" class="custom-icon" fit="cover" /> -->
+          <p class="body-small-regular neutral-700 text-hidden-no-magin">
+            {{ item.name }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-container">
+      <div class="mb-sm">
+        <p class="body-medium-semi-bold neutral-800">Hình ảnh phòng</p>
+      </div>
+
+      <div class="image-gallery">
+        <div
+          class="image-box grid-item"
+          v-for="(item, index) in images"
+          :key="index"
+          :class="{ active: item.firstDisplay }"
+        >
+          <el-image :src="item.imagePath" class="image-preview" fit="cover" />
+          <div v-if="item.firstDisplay" class="main-label flex-center">
+            <i class="el-icon-star-on secondary-orange-500" />
+            <p class="small-cap-small-cap secondary-orange-600">Ảnh đại diện</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-container">
+      <div class="mb-sm">
+        <p class="body-medium-semi-bold neutral-800">Địa chỉ</p>
+      </div>
+
+      <div class="custom-address">
+        <div>
+          <p class="body-small-regular neutral-700">{{ project.address }}</p>
+        </div>
+        <div>
+          <GoogleMap :center="center" :zoom="12" height="400px" width="100%" />
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-container">
+      <div class="mb-sm">
+        <p class="body-medium-semi-bold neutral-800">Mô tả</p>
+      </div>
+
+      <div>
+        <p class="body-small-regular neutral-700">{{ project.description }}</p>
+      </div>
+    </div>
+  </HaOffsetSection>
+</template>
+
+<script lang="ts" setup>
+import HaOffsetSection from '@/components/global/HaOffsetSection.vue'
+import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
+import GoogleMap from '@/components/global/GoogleMap.vue'
+import { ref, onMounted, reactive } from 'vue'
+import { getProjectById, type Project } from './api'
+
+import { usePage } from '../mixin'
+const { setStatus, setTypeStatus } = usePage()
+
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+
+const onDirectProjectEdit = (value: number) => {
+  console.log('onDirectEdit :', value)
+}
+
+const ui = reactive({
+  isLoading: false,
+})
+
+const project = ref<any>([])
+const center = reactive({ lat: 10.762622, lng: 106.660172 })
+
+const facilities = reactive<any[]>([
+  {
+    sn: 1,
+    name: 'Wi-Fi miễn phí',
+  },
+  {
+    sn: 2,
+    name: 'Bãi đỗ xe ô tô',
+  },
+  {
+    sn: 3,
+    name: 'Lễ tân 24/24',
+  },
+])
+
+const images = reactive<any[]>([
+  {
+    sn: 1,
+    firstDisplay: 1,
+    imagePath:
+      'https://res.cloudinary.com/ds8q7doz2/image/upload/v1755679804/nen-o-tro-hay-chung-cu_1_dumw8m.png',
+  },
+  {
+    sn: 2,
+    firstDisplay: 0,
+    imagePath:
+      'https://res.cloudinary.com/ds8q7doz2/image/upload/v1755679804/nen-o-tro-hay-chung-cu_1_dumw8m.png',
+  },
+  {
+    sn: 3,
+    firstDisplay: 0,
+    imagePath:
+      'https://res.cloudinary.com/ds8q7doz2/image/upload/v1755679804/nen-o-tro-hay-chung-cu_1_dumw8m.png',
+  },
+])
+
+const fetchProjectDetail = async () => {
+  try {
+    ui.isLoading = true
+    const id = route.params.id as string
+    project.value = await getProjectById(id)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    ui.isLoading = false
+  }
+}
+
+onMounted(() => {
+  fetchProjectDetail()
+})
+</script>
+
+<style lang="scss" scoped>
+.custom-header-action {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: baseline;
+  justify-items: flex-end;
+
+  @media only screen and (max-width: 992px) {
+    grid-template-columns: 1fr;
+    justify-items: flex-start;
+  }
+
+  .position-item-2 {
+    margin-left: 8px;
+    margin-right: 16px;
+  }
+}
+
+.custom-container {
+  margin: 16px 0;
+}
+
+.mb-sm {
+  margin-bottom: 8px;
+}
+
+.custom-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 16px;
+
+  :deep(.el-card__body) {
+    text-align: center;
+  }
+
+  p:first-child {
+    margin-bottom: 4px;
+  }
+}
+
+/* ------------ START FACILITIES ------------ */
+.custom-card-facilities {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 16px;
+
+  .item {
+    border-bottom: 1px dashed var(--neutral-200);
+    padding-bottom: 12px;
+  }
+
+  @media only screen and (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.custom-address {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+</style>

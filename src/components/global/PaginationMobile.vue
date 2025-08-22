@@ -1,8 +1,8 @@
 <template>
   <el-pagination
-    :class="ui.isResponsiveMobile ? 'flex' : 'flex justify-flex-end'"
+    :class="$ui.isResponsiveMobile ? 'flex' : 'flex justify-flex-end'"
     background
-    :layout="ui.isResponsiveMobile ? 'prev, next' : 'prev, pager, next'"
+    :layout="$ui.isResponsiveMobile ? 'prev, next' : 'prev, pager, next'"
     :total="pagination.total"
     :page-size.sync="pagination.perPage"
     :current-page="pagination.currentPage"
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: "PaginationMobile",
+  name: 'PaginationMobile',
   props: {
     pageSizes: {
       type: Array(),
@@ -22,7 +22,7 @@ export default {
     },
     layout: {
       type: String,
-      default: "slot, prev, pager, next",
+      default: 'slot, prev, pager, next',
     },
   },
   data() {
@@ -32,20 +32,20 @@ export default {
         perPage: 10,
         currentPage: 1,
       },
-    };
+    }
   },
   methods: {
     fetchMetaPagination(pagination) {
-      this.pagination = pagination;
+      this.pagination = pagination
     },
     handleSizeChange(size) {
-      this.pagination.currentPage = 1;
-      this.$emit("changePageSize", size);
+      this.pagination.currentPage = 1
+      this.$emit('changePageSize', size)
     },
     handleCurrentChange(currentPage) {
-      this.pagination.currentPage = currentPage;
-      this.$emit("changeCurrentPage", currentPage);
+      this.pagination.currentPage = currentPage
+      this.$emit('changeCurrentPage', currentPage)
     },
   },
-};
+}
 </script>

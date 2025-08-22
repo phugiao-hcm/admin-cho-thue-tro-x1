@@ -1,11 +1,11 @@
 <template>
   <HaSection>
     <div class="flex-between" style="margin: 16px 0">
-      <p>Danh sách loại phòng</p>
+      <p class="body-large-semi-bold neutral-700">Danh sách phòng</p>
 
       <div class="flex-center">
         <div>
-          <el-input v-model="filter.keyword" style="width: 240px" placeholder="Please input" />
+          <el-input v-model="filter.keyword" style="width: 240px" placeholder="Nhập tìm kiếm..." />
         </div>
         <div>
           <el-button type="primary" @click="onDirectProjectCreate">Tạo phòng</el-button>
@@ -13,8 +13,30 @@
       </div>
     </div>
 
+    <div class="radio-group-outer" style="margin: 16px 0">
+      <el-radio-group v-model="filter.keyword" @change="onChangeTab">
+        <el-radio-button label=""
+          ><span>Tất cả</span>
+          <span class="custom-num"> 10</span>
+        </el-radio-button>
+        <el-radio-button :label="PROJECT_STATUS.PENDING"
+          ><span>Đang chờ xử lý </span>
+          <span class="custom-num"> 2</span>
+        </el-radio-button>
+        <el-radio-button :label="PROJECT_STATUS.APPROVED"
+          ><span>Đã duyệt </span>
+          <span class="custom-num"> 2</span>
+        </el-radio-button>
+        <el-radio-button :label="PROJECT_STATUS.REJECTED"
+          ><span>Bị từ chối </span>
+          <span class="custom-num"> 2</span>
+        </el-radio-button>
+      </el-radio-group>
+    </div>
+
     <div class="el-table-outer">
       <el-table
+        v-loading="ui.isLoading"
         :data="tableData"
         :header-cell-style="{
           background: '#F9FAFB',
@@ -23,23 +45,34 @@
           paddingBottom: '10px',
         }"
       >
+        <el-table-column min-width="100">
+          <template #header>
+            <p class="body-small-semi-bold neutral-500">Ảnh đại diện</p>
+          </template>
+          <template #default="scope">
+            <el-image :src="scope.row.images[0]" style="width: 100px" fit="cover" />
+          </template>
+        </el-table-column>
         <el-table-column min-width="220">
           <template #header>
             <p class="body-small-semi-bold neutral-500">Tiêu đề</p>
           </template>
           <template #default="scope">
-            <p class="body-small-regular neutral-600">
-              {{ scope.row.date }}
-            </p>
+            <el-link
+              type="primary"
+              underline="never"
+              @click="onDirectProjectDetail(scope.row.id)"
+              >{{ scope.row.name }}</el-link
+            >
           </template>
         </el-table-column>
-        <el-table-column min-width="220">
+        <el-table-column min-width="160">
           <template #header>
-            <p class="body-small-semi-bold neutral-500">Name</p>
+            <p class="body-small-semi-bold neutral-500">Giá (/1 phòng)</p>
           </template>
           <template #default="scope">
             <p class="body-small-regular neutral-600">
-              {{ scope.row.name }}
+              {{ $formatPrice(scope.row.price) }}
             </p>
           </template>
         </el-table-column>
@@ -51,6 +84,62 @@
             <p class="body-small-regular neutral-600">
               {{ scope.row.address }}
             </p>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="220">
+          <template #header>
+            <p class="body-small-semi-bold neutral-500">Tiện ích</p>
+          </template>
+          <template #default="scope">
+            <p class="body-small-regular neutral-600">
+              {{ scope.row.facilities[0] }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="220">
+          <template #header>
+            <p class="body-small-semi-bold neutral-500">Mô tả</p>
+          </template>
+          <template #default="scope">
+            <el-tooltip :content="scope.row.description" placement="top" effect="dark">
+              <p class="body-small-regular neutral-600 text-hidden-2">
+                {{ scope.row.description }}
+              </p>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="220">
+          <template #header>
+            <p class="body-small-semi-bold neutral-500">Trạng thái</p>
+          </template>
+          <template #default="scope">
+            <el-tag :type="setTypeStatus(scope.row.status)">
+              {{ setStatus(scope.row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="160">
+          <template #default="scope">
+            <el-popover placement="left-start" :width="200" trigger="click">
+              <template #reference>
+                <el-button type="primary" plain>Thao tác</el-button>
+              </template>
+
+              <div class="el-popover_item">
+                <div>
+                  <el-button link type="primary" @click="onDirectProjectEdit(scope.row.status)">
+                    <el-icon><EditPen /></el-icon>
+                    <span>Chỉnh sửa</span>
+                  </el-button>
+                </div>
+                <div>
+                  <el-button link type="danger" @click="onProjectRemove(scope.row.status)">
+                    <el-icon><CircleCloseFilled /></el-icon>
+                    <span>Ngừng kinh doanh</span>
+                  </el-button>
+                </div>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -68,36 +157,24 @@
 
 
 <script lang="ts" setup>
-import HaSection from '../../../components/global/HaSection.vue'
-import { reactive, ref } from 'vue'
+import HaSection from '@/components/global/HaSection.vue'
+import { reactive, ref, onMounted } from 'vue'
 import type { FormItemProps, FormProps } from 'element-plus'
 import { useRouter } from 'vue-router'
-import Pagination from '../../../components/global/PaginationMobile.vue'
+import Pagination from '@/components/global/PaginationMobile.vue'
+import { getProjectList } from './api'
+import { PROJECT_STATUS } from '../const'
+import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
+import { usePage } from '../mixin'
+const { setStatus, setTypeStatus } = usePage()
 
 const router = useRouter()
 
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+const tableData = ref<any>([])
+
+const ui = reactive({
+  isLoading: false,
+})
 
 const filter = reactive({
   page: 1,
@@ -121,8 +198,46 @@ const handleCurrentChange = (value: any) => {
   getRoomTypeList()
 }
 
+const fetchProjects = async () => {
+  try {
+    ui.isLoading = true
+    tableData.value = await getProjectList()
+
+    console.log('tableData :', tableData)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    ui.isLoading = false
+  }
+}
+
+onMounted(() => {
+  fetchProjects()
+})
+
 const onDirectProjectCreate = () => {
   // điều hướng bằng path
   router.push({ name: 'ProjectCreate' })
 }
+
+const onChangeTab = () => {}
+const onDirectProjectEdit = (value: number) => {
+  console.log('onDirectProjectEdit :', value)
+}
+const onProjectRemove = (value: number) => {
+  console.log('onDirectProjectEdit :', value)
+}
+
+const onDirectProjectDetail = (id: any) => {
+  router.push({ name: 'ProjectDetail', params: { id } })
+}
 </script>
+
+
+<style lang="scss" scoped>
+.el-popover_item {
+  div {
+    margin: 4px 0;
+  }
+}
+</style>

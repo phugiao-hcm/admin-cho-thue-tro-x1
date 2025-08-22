@@ -10,14 +10,14 @@
         class="main-section"
         :class="[
           menuClass,
-          ui.isResponsiveMobile && !isCollapse ? 'overlay-header-bg is-disabled' : '',
+          $ui.isResponsiveMobile && !isCollapse ? 'overlay-header-bg is-disabled' : '',
         ]"
       >
         <Breadcrumb
-          v-if="!ui.isResponsiveMobile"
+          v-if="!$ui.isResponsiveMobile"
           :totalNotificationNotRead="totalNotificationNotRead"
         />
-        <div v-if="ui.isResponsiveMobile" class="flex-between" style="padding-top: 8px">
+        <div v-if="$ui.isResponsiveMobile" class="flex-between" style="padding-top: 8px">
           <div class="flex-center" style="gap: 16px">
             <el-link :underline="false" @click="getCollapsed">
               <span class="icon-arrow-right"></span>
@@ -32,7 +32,7 @@
           class="main-section"
           :class="[
             menuClass,
-            ui.isResponsiveMobile && !isCollapse ? 'overlay overlay-header-bg is-disabled' : '',
+            $ui.isResponsiveMobile && !isCollapse ? 'overlay overlay-header-bg is-disabled' : '',
           ]"
         >
           <router-view></router-view>
@@ -65,7 +65,7 @@ export default {
       return !this.isCollapse ? 'active' : ''
     },
     iosPaddingStyle() {
-      if (this.ui.isResponsiveMobile) {
+      if (this.$ui.isResponsiveMobile) {
         return { paddingBottom: '100px !important' }
       } else {
         return { paddingBottom: '60px !important' }
