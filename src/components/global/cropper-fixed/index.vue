@@ -35,38 +35,22 @@
       </div>
       <div slot="footer" class="thumbnail-dialog__footer">
         <div class="flex justify-flex-end">
-          <el-button
-            type="info"
-            @click="dialogVisibleCropper = false"
-            size="small"
-          >
-            {{ $t("button.cancel") }}
+          <el-button type="info" @click="dialogVisibleCropper = false" size="small">
+            {{ $t('button.cancel') }}
           </el-button>
-          <el-button
-            size="small"
-            :loading="ui.isSubmitting"
-            type="primary"
-            @click="crop()"
-          >
-            {{ $t("button.confirm") }}
+          <el-button size="small" :loading="ui.isSubmitting" type="primary" @click="crop()">
+            {{ $t('button.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
     <img :src="imageCropper" style="display: none" />
-    <div
-      class="upload-file custom-button-upload"
-      v-if="typeUpload === 'file-upload'"
-    >
+    <div class="upload-file custom-button-upload" v-if="typeUpload === 'file-upload'">
       <el-button type="primary" @click="onOpen" size="small">
-        {{ $t("button.chooseFile") }} <slot />
+        {{ $t('button.chooseFile') }} <slot />
       </el-button>
     </div>
-    <div
-      class="avatar-upload"
-      @click="onOpen"
-      v-else-if="typeUpload === 'avatar-upload'"
-    >
+    <div class="avatar-upload" @click="onOpen" v-else-if="typeUpload === 'avatar-upload'">
       <i class="el-icon-plus"> </i>
     </div>
     <div v-else-if="typeUpload === 'avatar-upload-custom'">
@@ -80,32 +64,32 @@
 </template>
 
 <script>
-import { Cropper } from "vue-advanced-cropper";
-import "vue-advanced-cropper/dist/style.css";
+import { Cropper } from 'vue-advanced-cropper'
+import 'vue-advanced-cropper/dist/style.css'
 
 function getMimeType(file, fallback = null) {
-  const byteArray = new Uint8Array(file).subarray(0, 4);
-  let header = "";
+  const byteArray = new Uint8Array(file).subarray(0, 4)
+  let header = ''
   for (let i = 0; i < byteArray.length; i++) {
-    header += byteArray[i].toString(16);
+    header += byteArray[i].toString(16)
   }
   switch (header) {
-    case "89504e47":
-      return "image/png";
-    case "47494638":
-      return "image/gif";
-    case "ffd8ffe0":
-    case "ffd8ffe1":
-    case "ffd8ffe2":
-    case "ffd8ffe3":
-    case "ffd8ffe8":
-      return "image/jpeg";
+    case '89504e47':
+      return 'image/png'
+    case '47494638':
+      return 'image/gif'
+    case 'ffd8ffe0':
+    case 'ffd8ffe1':
+    case 'ffd8ffe2':
+    case 'ffd8ffe3':
+    case 'ffd8ffe8':
+      return 'image/jpeg'
     default:
-      return fallback;
+      return fallback
   }
 }
 export default {
-  name: "CropperFixed",
+  name: 'CropperFixed',
   props: {
     width: {
       type: [String, Number],
@@ -117,15 +101,13 @@ export default {
     },
     typeUpload: {
       type: String,
-      default: "file-upload",
+      default: 'file-upload',
       validator: (value) =>
-        ["file-upload", "avatar-upload", "avatar-upload-custom"].indexOf(
-          value
-        ) !== -1,
+        ['file-upload', 'avatar-upload', 'avatar-upload-custom'].indexOf(value) !== -1,
     },
     accept: {
       type: String,
-      default: "image/png, image/jpeg, image/jpg",
+      default: 'image/png, image/jpeg, image/jpg',
     },
   },
   components: {
@@ -148,93 +130,91 @@ export default {
       keepOriginalImage: 0,
       is360: false,
       result360: null,
-    };
+    }
   },
   methods: {
     onOpen(e) {
-      this.dialogTypeImageVisible = true;
+      this.dialogTypeImageVisible = true
 
-      this.keepOriginalImage = 0;
-      e.target.value = "";
-      this.is360 = false;
+      this.keepOriginalImage = 0
+      e.target.value = ''
+      this.is360 = false
 
-      this.$refs.file.click(); // Kích hoạt input file
+      this.$refs.file.click() // Kích hoạt input file
     },
     defaultSize() {
       return {
         width: this.width,
         height: this.height,
-      };
+      }
     },
     crop() {
       try {
-        this.ui.isSubmitting = true;
-        const { coordinates, canvas } = this.$refs.cropper.getResult();
-        this.imageCropper = canvas.toDataURL();
-        this.onResize(coordinates);
+        this.ui.isSubmitting = true
+        const { coordinates, canvas } = this.$refs.cropper.getResult()
+        this.imageCropper = canvas.toDataURL()
+        this.onResize(coordinates)
       } catch (error) {
-        return false;
+        return false
       } finally {
-        this.dialogTypeImageVisible = false;
+        this.dialogTypeImageVisible = false
       }
     },
     onResize(coordinates) {
       setTimeout(async () => {
-        await this.getScaleCanvas(coordinates);
-        this.dialogVisibleCropper = false;
-        this.ui.isSubmitting = false;
-      }, 50);
+        await this.getScaleCanvas(coordinates)
+        this.dialogVisibleCropper = false
+        this.ui.isSubmitting = false
+      }, 50)
     },
     getScaleCanvas(canvas) {
-      var vm = this;
-      const img = new Image();
-      img.src = this.imageCropper;
-      const scaleCanvas = document.createElement("canvas");
-      const scale = this.width / canvas.width;
+      var vm = this
+      const img = new Image()
+      img.src = this.imageCropper
+      const scaleCanvas = document.createElement('canvas')
+      const scale = this.width / canvas.width
 
-      scaleCanvas.width = canvas.width * scale * 2;
-      scaleCanvas.height = canvas.height * scale * 2;
+      scaleCanvas.width = canvas.width * scale * 2
+      scaleCanvas.height = canvas.height * scale * 2
 
-      const ctx = scaleCanvas.getContext("2d");
+      const ctx = scaleCanvas.getContext('2d')
 
-      ctx.save();
-      ctx.drawImage(img, 0, 0, scaleCanvas.width, scaleCanvas.height);
-      ctx.restore();
-      const imageData = scaleCanvas.toDataURL("image/webp", 0.98);
+      ctx.save()
+      ctx.drawImage(img, 0, 0, scaleCanvas.width, scaleCanvas.height)
+      ctx.restore()
+      const imageData = scaleCanvas.toDataURL('image/webp', 0.98)
 
       scaleCanvas.toBlob(
         async function (blob) {
           vm.result = new File(
             [blob],
-            vm.keepOriginalImage
-              ? vm.infoFile.name
-              : `${vm.infoFile.name}.webp`,
+            vm.keepOriginalImage ? vm.infoFile.name : `${vm.infoFile.name}.webp`,
             { type: blob.type }
-          );
-          vm.$emit("onResult", vm.result);
+          )
+          vm.$emit('onResult', vm.result)
         },
-        vm.keepOriginalImage ? vm.infoFile.type : "image/webp"
-      );
-      return imageData;
+        vm.keepOriginalImage ? vm.infoFile.type : 'image/webp'
+      )
+      return imageData
     },
     loadImage(event, is360) {
       if (!is360) {
-        this.dialogVisibleCropper = true;
+        this.dialogVisibleCropper = true
       }
-      this.is360 = is360; // Xác định ảnh phải là 360 không
+      this.is360 = is360 // Xác định ảnh phải là 360 không
 
       // Reference to the DOM input element
-      const { files } = event.target;
+      const { files } = event.target
       // Ensure that you have a file before attempting to read it
       if (files && files[0]) {
-        this.infoFile = files[0];
+        this.infoFile = files[0]
 
         // 1. Revoke the object URL, to allow the garbage collector to destroy the uploaded before file
         if (this.image.src) {
-          URL.revokeObjectURL(this.image.src);
+          URL.revokeObjectURL(this.image.src)
         }
         // 2. Create the blob link to the file to optimize performance:
-        const blob = URL.createObjectURL(files[0]);
+        const blob = URL.createObjectURL(files[0])
 
         // 3. The steps below are designated to determine a file mime type to use it during the
         // getting of a cropped image from the canvas. You can replace it them by the following string,
@@ -246,7 +226,7 @@ export default {
         // }
 
         // Create a new FileReader to read this image binary data
-        const reader = new FileReader();
+        const reader = new FileReader()
         // Define a callback function to run, when FileReader finishes its job
         reader.onload = (e) => {
           // Note: arrow function used here, so that "this.image" refers to the image of Vue component
@@ -255,72 +235,64 @@ export default {
             src: blob,
             // Determine the image type to preserve it during the extracting the image from canvas:
             type: getMimeType(e.target.result, files[0].type),
-          };
-        };
+          }
+        }
         // Start the reader job - read file as a data url (base64 format)
-        reader.readAsArrayBuffer(files[0]);
+        reader.readAsArrayBuffer(files[0])
       }
       if (is360 && files[0] && this.infoFile) {
-        this.ResizeImage360();
+        this.ResizeImage360()
       }
     },
     ResizeImage360() {
-      var self = this;
+      var self = this
       if (self.infoFile) {
-        var reader = new FileReader();
+        var reader = new FileReader()
         // Set the image once loaded into file reader
         reader.onload = function (e) {
-          const img360 = new Image();
-          img360.src = e.target.result;
-          var scaleCanvas360 = document.createElement("canvas");
+          const img360 = new Image()
+          img360.src = e.target.result
+          var scaleCanvas360 = document.createElement('canvas')
 
-          scaleCanvas360.width = img360.width;
-          scaleCanvas360.height = img360.height;
+          scaleCanvas360.width = img360.width
+          scaleCanvas360.height = img360.height
 
-          const ctx360 = scaleCanvas360.getContext("2d");
+          const ctx360 = scaleCanvas360.getContext('2d')
           if (scaleCanvas360.width && scaleCanvas360.height) {
-            ctx360.save();
-            ctx360.drawImage(
-              img360,
-              0,
-              0,
-              scaleCanvas360.width,
-              scaleCanvas360.height
-            );
-            ctx360.restore();
+            ctx360.save()
+            ctx360.drawImage(img360, 0, 0, scaleCanvas360.width, scaleCanvas360.height)
+            ctx360.restore()
 
-            const imageData360 = scaleCanvas360.toDataURL("image/webp");
+            const imageData360 = scaleCanvas360.toDataURL('image/webp')
             scaleCanvas360.toBlob(
               function (blob) {
                 self.result360 = new File(
                   [blob],
-                  self.keepOriginalImage
-                    ? self.infoFile.name
-                    : `${self.infoFile.name}.webp`,
+                  self.keepOriginalImage ? self.infoFile.name : `${self.infoFile.name}.webp`,
                   { type: blob.type }
-                );
-                self.$emit("onResult", self.result360, self.is360);
+                )
+                self.$emit('onResult', self.result360, self.is360)
               },
-              self.keepOriginalImage ? self.infoFile.type : "image/webp"
-            );
-            return imageData360;
+              self.keepOriginalImage ? self.infoFile.type : 'image/webp'
+            )
+            return imageData360
           } else {
-            self.ResizeImage360();
+            self.ResizeImage360()
           }
-        };
-        reader.readAsDataURL(self.infoFile);
+        }
+        reader.readAsDataURL(self.infoFile)
       }
-      this.dialogTypeImageVisible = false;
+      this.dialogTypeImageVisible = false
     },
 
     resetImage() {
-      this.image = { src: null, type: null };
-      this.imageCropper = null;
-      this.result = null;
-      this.$refs.file.value = null;
+      this.image = { src: null, type: null }
+      this.imageCropper = null
+      this.result = null
+      this.$refs.file.value = null
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -363,7 +335,7 @@ export default {
     font-weight: 500;
     cursor: pointer;
     border-radius: 4px;
-    input[type="file"] {
+    input[type='file'] {
       display: none;
     }
   }
@@ -405,13 +377,6 @@ export default {
       align-items: center;
     }
   }
-  // &__footer {
-  //   display: flex;
-  //   align-items: center;
-  //   gap: 1em;
-  //   justify-content: space-between;
-  //   flex-wrap: wrap;
-  // }
 }
 .mr-4px {
   margin-right: 4px;

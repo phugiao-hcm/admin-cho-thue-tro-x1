@@ -294,7 +294,8 @@
                 </div>
 
                 <!-- Thêm ảnh -->
-                <div v-show="form.imageList.length < 11">
+                <!-- <div v-show="form.imageList.length < 11"> -->
+                <div>
                   <CropperFixed
                     ref="cropperFixedRef"
                     @onResult="resultThumbnail"
@@ -435,8 +436,8 @@ import InputNumber from '@/components/global/InputNumber.vue'
 import InputNumberAcceptNull from '@/components/global/InputNumberAcceptNull.vue'
 import InputRoundMoney from '@/components/global/InputRoundMoney.vue'
 import GoogleMap from '@/components/global/GoogleMap.vue'
+import CropperFixed from '@/components/global/cropper-fixed/index.vue'
 
-const timeDebounce = 1200
 export default {
   name: 'CreateRoomType',
   components: {
@@ -445,6 +446,7 @@ export default {
     InputNumberAcceptNull,
     InputRoundMoney,
     GoogleMap,
+    CropperFixed,
   },
   data(vm) {
     const validateRequiredImages = (_rule, _value, callback) => {
@@ -824,5 +826,5 @@ export default {
 </script>
 
 <style lang="scss">
-@use '../common/scss/create.scss'; // KHÔNG cần dấu gạch dưới và phần mở rộng .scss
+@use '../common/scss/create.scss';
 </style>

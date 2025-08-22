@@ -23,7 +23,7 @@
           <template #title><span>Trang chủ</span></template>
         </el-menu-item>
       </router-link>
-      <router-link to="#">
+      <router-link :to="{ name: 'ProjectList' }">
         <el-menu-item index="projects">
           <el-icon><icon-menu /></el-icon>
           <template #title><span>Dự án</span></template>
