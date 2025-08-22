@@ -46,7 +46,7 @@ export default {
       if (!route.meta.breadcrumb.title.hard_code) {
         return route.meta.breadcrumb.title.name
       }
-      return this.$t(`breadcrumb.${route.meta.breadcrumb.title.name}`)
+      return route.meta.breadcrumb.title.name
     },
   },
 }
@@ -54,9 +54,8 @@ export default {
 
 <style lang="scss" scoped>
 .section {
-  padding: 0 16px 16px !important;
+  padding: 0 20px 16px !important;
   background-color: white;
-  margin-top: 8px;
 
   &__header {
     margin: 0 0 12px;

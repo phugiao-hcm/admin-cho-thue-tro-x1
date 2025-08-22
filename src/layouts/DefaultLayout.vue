@@ -1,32 +1,25 @@
 <template>
   <div class="layout-default">
     <el-container>
+      <!-- Sidebar -->
       <el-aside id="sidebar-section" class="left-section" :class="menuClass" style="z-index: 99">
         <LeftSidebar :isCollapse="isCollapse" @collapsed="getCollapsed" />
       </el-aside>
 
       <el-container>
-        <!-- <el-header
-        class="main-section"
-        :class="[
-          menuClass,
-          ui.isResponsiveMobile && !isCollapse ? 'overlay-header-bg is-disabled' : '',
-        ]"
-      >
-        <Breadcrumb
-          v-if="!ui.isResponsiveMobile"
-          :totalNotificationNotRead="totalNotificationNotRead"
-        />
-        <div v-if="ui.isResponsiveMobile" class="flex-between" style="padding-top: 8px">
-          <div class="flex-center" style="gap: 16px">
-            <el-link :underline="false" @click="getCollapsed">
-              <span class="icon-arrow-right"></span>
-            </el-link>
-            <img class="logo-big" src="@/assets/images/svg/g2j-logo.svg" width="86px" />
-          </div>
-          <Breadcrumb :totalNotificationNotRead="totalNotificationNotRead" />
-        </div>
-      </el-header> -->
+        <!-- Header -->
+        <el-header
+          class="main-section"
+          :class="[
+            menuClass,
+            ui.isResponsiveMobile && !isCollapse ? 'overlay-header-bg is-disabled' : '',
+          ]"
+        >
+          <HeaderBar :isCollapse="isCollapse" />
+        </el-header>
+        <el-divider style="margin: 12px 0" />
+
+        <!-- Main content -->
         <el-main
           id="main-section"
           class="main-section"
@@ -35,7 +28,7 @@
             ui.isResponsiveMobile && !isCollapse ? 'overlay overlay-header-bg is-disabled' : '',
           ]"
         >
-          <router-view></router-view>
+          <router-view />
           <div :style="iosPaddingStyle"></div>
         </el-main>
       </el-container>
@@ -43,51 +36,55 @@
   </div>
 </template>
 
-<script>
-import Breadcrumb from './Breadcrumb.vue'
+<script setup lang="ts">
+import { ref, computed, onBeforeUnmount } from 'vue'
+import { ArrowRight } from '@element-plus/icons-vue'
 import LeftSidebar from './components/LeftSideBar.vue'
+import HeaderBar from './components/HeaderBar.vue'
+import Breadcrumb from './components/Breadcrumb.vue'
+import { useUI } from '@/mixins/globalMixin'
 
-export default {
-  name: 'default',
-  components: {
-    LeftSidebar,
-    Breadcrumb,
-  },
-  data() {
-    return {
-      isCollapse: true,
-      dialogVisible: false,
-      ui: {},
-    }
-  },
-  computed: {
-    menuClass() {
-      return !this.isCollapse ? 'active' : ''
-    },
-    iosPaddingStyle() {
-      if (this.ui.isResponsiveMobile) {
-        return { paddingBottom: '100px !important' }
-      } else {
-        return { paddingBottom: '60px !important' }
-      }
-    },
-  },
-  async created() {},
-  beforeDestroy() {
-    const scrollDemo = document.querySelector('#main-section')
-    scrollDemo.removeEventListener('scroll')
-  },
-  methods: {
-    getCollapsed() {
-      this.isCollapse = !this.isCollapse
-      const menuBtn = document.getElementById('menu-button')
-      if (menuBtn) {
-        menuBtn.style.width = !this.isCollapse ? '240px' : '64px'
-      }
-    },
-  },
+/**
+ * State
+ */
+const isCollapse = ref(true)
+const dialogVisible = ref(false)
+
+const { ui } = useUI()
+
+/**
+ * Computed
+ */
+const menuClass = computed(() => (!isCollapse.value ? 'active' : ''))
+
+const iosPaddingStyle = computed(() =>
+  ui.isResponsiveMobile
+    ? { paddingBottom: '100px !important' }
+    : { paddingBottom: '60px !important' }
+)
+
+/**
+ * Methods
+ */
+function getCollapsed() {
+  isCollapse.value = !isCollapse.value
+  const menuBtn = document.getElementById('menu-button')
+  if (menuBtn) {
+    menuBtn.style.width = !isCollapse.value ? '240px' : '64px'
+  }
 }
+
+/**
+ * Lifecycle
+ */
+onBeforeUnmount(() => {
+  const scrollDemo = document.querySelector('#main-section')
+  if (scrollDemo) {
+    scrollDemo.removeEventListener('scroll', () => {})
+  }
+})
 </script>
+
 
 <style lang="scss" scoped>
 .layout-default {

@@ -204,8 +204,6 @@ const fetchProjects = async () => {
   try {
     ui.isLoading = true
     tableData.value = await getProjectList()
-
-    console.log('tableData :', tableData)
   } catch (e) {
     console.error(e)
   } finally {

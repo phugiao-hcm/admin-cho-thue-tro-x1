@@ -4,16 +4,14 @@
     :min="0"
     v-model="priceOneDay"
     @blur="onChange"
-    :placeholder="
-      placeholder ? placeholder : $t('calendar.price_after_discount')
-    "
+    :placeholder="placeholder ? placeholder : ''"
   >
     <span v-if="suffix" slot="suffix" class="el-input__icon">{{ suffix }}</span>
   </el-input>
 </template>
 <script>
 export default {
-  name: "InputMoney",
+  name: 'InputMoney',
   props: {
     valueMoney: {
       type: Number,
@@ -26,35 +24,35 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "",
+      default: '',
     },
     suffix: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   data() {
     return {
       // value: this.valueMoney
-    };
+    }
   },
   computed: {
     priceOneDay: {
       get() {
         // if(this.value) return this.formatMoney(this.value)
-        return this.formatMoney(this.valueMoney);
+        return this.formatMoney(this.valueMoney)
       },
       set(val) {
-        this.valueMoney = Number(val.split(".").join(""));
+        this.valueMoney = Number(val.split('.').join(''))
       },
     },
   },
   methods: {
     onChange() {
-      this.$emit("onChange", this.valueMoney, this.dataObject);
+      this.$emit('onChange', this.valueMoney, this.dataObject)
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 :deep(input::-webkit-inner-spin-button) {

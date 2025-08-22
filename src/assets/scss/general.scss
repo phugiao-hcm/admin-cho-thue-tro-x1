@@ -1423,20 +1423,12 @@ body {
 }
 
 .el-main {
-  /*
-    padding: 0 16px 16px !important;
-    */
   padding: unset !important;
   flex: 1;
   display: flex;
   flex-direction: column;
   max-height: 100vh;
   overflow: auto;
-  /*
-    @media only screen and (max-width: 992px) {
-        padding-left: 16px !important;
-    }
-    */
 }
 
 #preview {

@@ -2,10 +2,10 @@
   <HaOffsetSection v-loading="ui.isLoading">
     <div style="margin-bottom: 16px">
       <div class="custom-header-action">
-        <div class="flex align-baseline">
+        <div class="flex-center">
           <div>
-            <el-link :underline="false" type="primary" @click="router.go(-1)">
-              <span class="icon-arrow-left-2" style="margin-right: 8px"></span>
+            <el-link :underline="false" @click="router.go(-1)">
+              <el-icon class="title2 neutral-900"><Back /></el-icon>
             </el-link>
           </div>
           <div class="position-item-2">
@@ -128,7 +128,7 @@
 
 <script lang="ts" setup>
 import HaOffsetSection from '@/components/global/HaOffsetSection.vue'
-import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
+import { EditPen, CircleCloseFilled, Back } from '@element-plus/icons-vue'
 import GoogleMap from '@/components/global/GoogleMap.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { getProjectById, type Project } from './api'

@@ -6,9 +6,7 @@
       </template>
 
       <template slot="description">
-        <p class="body-small-regular neutral-500">
-          {{ $t("empty.sorry_no_result_found") }}
-        </p>
+        <p class="body-small-regular neutral-500">sorry_no_result_found</p>
       </template>
     </el-empty>
   </div>
@@ -16,13 +14,13 @@
   
   <script>
 export default {
-  name: "EmptySearch",
+  name: 'EmptySearch',
   data() {
     return {
-      src: require("@/assets/images/png/empty-search.png"),
-    };
+      src: require('@/assets/images/png/empty-search.png'),
+    }
   },
-};
+}
 </script>
   
 <style lang="scss" scoped>
