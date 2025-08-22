@@ -118,7 +118,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column min-width="160">
+        <el-table-column min-width="160" align="center" fixed="right">
           <template #default="scope">
             <el-popover placement="left-start" :width="200" trigger="click">
               <template #reference>
@@ -133,7 +133,7 @@
                   </el-button>
                 </div>
                 <div>
-                  <el-button link type="danger" @click="onProjectRemove(scope.row.status)">
+                  <el-button link type="danger" @click="onProjectRemove(scope.row)">
                     <el-icon><CircleCloseFilled /></el-icon>
                     <span>Ngừng kinh doanh</span>
                   </el-button>
@@ -152,6 +152,10 @@
         @changeCurrentPage="handleCurrentChange"
       />
     </div>
+
+    <!-- =================== -->
+    <PopupRemove ref="dialogRef" />
+    <!-- =================== -->
   </HaSection>
 </template>
 
@@ -169,6 +173,7 @@ import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
 import { useUI } from '@/mixins/globalMixin'
 const { formatPrice } = useUI()
+import PopupRemove from '../components/PopupRemove.vue'
 
 const router = useRouter()
 
@@ -224,8 +229,10 @@ const onChangeTab = () => {}
 const onDirectProjectEdit = (value: number) => {
   console.log('onDirectProjectEdit :', value)
 }
-const onProjectRemove = (value: number) => {
-  console.log('onDirectProjectEdit :', value)
+
+const dialogRef = ref<any>(null)
+const onProjectRemove = (row: any) => {
+  dialogRef.value?.open(row)
 }
 
 const onDirectProjectDetail = (id: any) => {

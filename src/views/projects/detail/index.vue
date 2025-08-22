@@ -23,7 +23,7 @@
             <el-icon><EditPen /></el-icon>
             <span>Chỉnh sửa</span>
           </el-button>
-          <el-button type="danger" @click="onDirectProjectEdit">
+          <el-button type="danger" @click="onProjectRemove(project)">
             <el-icon><CircleCloseFilled /></el-icon>
             <span>Ngừng kinh doanh</span>
           </el-button>
@@ -123,6 +123,10 @@
         <p class="body-small-regular neutral-700">{{ project.description }}</p>
       </div>
     </div>
+
+    <!-- =================== -->
+    <PopupRemove ref="dialogRef" />
+    <!-- =================== -->
   </HaOffsetSection>
 </template>
 
@@ -133,6 +137,8 @@ import GoogleMap from '@/components/global/GoogleMap.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { getProjectById, type Project } from './api'
 import { usePage } from '../mixin'
+import PopupRemove from '../components/PopupRemove.vue'
+
 const { setStatus, setTypeStatus } = usePage()
 import { useUI } from '@/mixins/globalMixin'
 const { formatPrice } = useUI()
@@ -203,6 +209,11 @@ const fetchProjectDetail = async () => {
 onMounted(() => {
   fetchProjectDetail()
 })
+
+const dialogRef = ref<any>(null)
+const onProjectRemove = (row: any) => {
+  dialogRef.value?.open(row)
+}
 </script>
 
 <style lang="scss" scoped>
