@@ -10,7 +10,7 @@ const ui = reactive({
 
 const formatPrice = (value?: number | null): string => {
   if (typeof value !== 'number') return ''
-  return value.toLocaleString('vi-VN') + ' ₫'
+  return value ? value.toLocaleString('vi-VN') + ' ₫' : '---'
 }
 
 const handleResize = () => {

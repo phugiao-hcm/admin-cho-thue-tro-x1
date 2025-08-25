@@ -56,7 +56,11 @@
                         <p class="body-small-semi-bold neutral-500">Ảnh đại diện</p>
                     </template>
                     <template #default="scope">
-                        <el-image :src="scope.row.images[0]" style="width: 100px" fit="cover" />
+                        <el-image
+                            :src="scope.row.images ? scope.row.images[0] : ''"
+                            style="width: 100px"
+                            fit="cover"
+                        />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="220">
@@ -98,7 +102,7 @@
                     </template>
                     <template #default="scope">
                         <p class="body-small-regular neutral-600">
-                            {{ scope.row.facilities[0] }}
+                            {{ scope.row.facilities ? scope.row.facilities[0] : '' }}
                         </p>
                     </template>
                 </el-table-column>

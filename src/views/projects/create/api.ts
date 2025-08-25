@@ -1,23 +1,16 @@
-// // src/api/projects.ts
-// import { db } from '@/plugins/firebase'
-// import { collection, addDoc, Timestamp } from 'firebase/firestore'
+import { collection, addDoc, Timestamp, getFirestore } from 'firebase/firestore'
+import app from '@/plugins/firebaseConfig' // assuming default export is your FirebaseApp
 
-// export interface Project {
-//   name: string
-//   description: string
-//   createdAt?: Date
-// }
+const db = getFirestore(app)
 
-// export const addProject = async (project: Project) => {
-//   try {
-//     const docRef = await addDoc(collection(db, 'projects'), {
-//       ...project,
-//       createdAt: Timestamp.now(), // thêm thời gian tạo
-//     })
-//     console.log('Document written with ID: ', docRef.id)
-//     return docRef.id
-//   } catch (e) {
-//     console.error('Error adding document: ', e)
-//     throw e
-//   }
-// }
+export async function addProject(project: Omit<any, 'id'>): Promise<string> {
+  try {
+    const docRef = await addDoc(collection(db, 'projects'), {
+      ...project,
+      createdAt: Timestamp.now(), // thêm timestamp
+    })
+    return docRef.id
+  } catch (error) {
+    throw error
+  }
+}

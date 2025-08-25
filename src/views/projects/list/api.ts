@@ -1,5 +1,5 @@
 import { collection, getDocs, getFirestore } from 'firebase/firestore'
-import app from '../../../plugins/firebaseConfig' // assuming default export is your FirebaseApp
+import app from '@/plugins/firebaseConfig' // assuming default export is your FirebaseApp
 
 export interface Projects {
   id: string
