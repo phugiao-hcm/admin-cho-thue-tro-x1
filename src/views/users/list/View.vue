@@ -1,7 +1,7 @@
 <template>
     <HaSection>
         <div class="flex-between" style="margin: 16px 0">
-            <p class="body-large-semi-bold neutral-700">Danh sách Tin đăng</p>
+            <p class="body-large-semi-bold neutral-700">Danh sách tài khoản</p>
 
             <div class="flex-center">
                 <div>
@@ -13,7 +13,7 @@
                 </div>
                 <div>
                     <el-button type="primary" @click="onDirectProjectCreate"
-                        >Tạo Tin đăng</el-button
+                        >Tạo tài khoản</el-button
                     >
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     <span class="custom-num"> 10</span>
                 </el-radio-button>
                 <el-radio-button :label="PROJECT_STATUS.PENDING"
-                    ><span>Đang chờ xử lý </span>
+                    ><span>Chở duyệt </span>
                     <span class="custom-num"> 2</span>
                 </el-radio-button>
                 <el-radio-button :label="PROJECT_STATUS.APPROVED"
@@ -51,17 +51,9 @@
                     paddingBottom: '10px',
                 }"
             >
-                <el-table-column min-width="130">
-                    <template #header>
-                        <p class="body-small-semi-bold neutral-500">Ảnh đại diện</p>
-                    </template>
-                    <template #default="scope">
-                        <el-image :src="scope.row.images[0]" style="width: 100px" fit="cover" />
-                    </template>
-                </el-table-column>
                 <el-table-column min-width="220">
                     <template #header>
-                        <p class="body-small-semi-bold neutral-500">Tiêu đề</p>
+                        <p class="body-small-semi-bold neutral-500">Tên đăng nhập</p>
                     </template>
                     <template #default="scope">
                         <el-link
@@ -74,7 +66,7 @@
                 </el-table-column>
                 <el-table-column min-width="160">
                     <template #header>
-                        <p class="body-small-semi-bold neutral-500">Giá (/1 phòng)</p>
+                        <p class="body-small-semi-bold neutral-500">Điện thoại</p>
                     </template>
                     <template #default="scope">
                         <p class="body-small-regular neutral-600">
@@ -84,34 +76,12 @@
                 </el-table-column>
                 <el-table-column min-width="220">
                     <template #header>
-                        <p class="body-small-semi-bold neutral-500">Địa chỉ</p>
+                        <p class="body-small-semi-bold neutral-500">Sản phẩm cho thuê/bán</p>
                     </template>
                     <template #default="scope">
                         <p class="body-small-regular neutral-600">
                             {{ scope.row.address }}
                         </p>
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="220">
-                    <template #header>
-                        <p class="body-small-semi-bold neutral-500">Tiện ích</p>
-                    </template>
-                    <template #default="scope">
-                        <p class="body-small-regular neutral-600">
-                            {{ scope.row.facilities[0] }}
-                        </p>
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="220">
-                    <template #header>
-                        <p class="body-small-semi-bold neutral-500">Mô tả</p>
-                    </template>
-                    <template #default="scope">
-                        <el-tooltip :content="scope.row.description" placement="top" effect="dark">
-                            <p class="body-small-regular neutral-600 text-hidden-2">
-                                {{ scope.row.description }}
-                            </p>
-                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column min-width="220">
@@ -166,10 +136,6 @@
                 @changeCurrentPage="handleCurrentChange"
             />
         </div>
-
-        <!-- =================== -->
-        <PopupRemove ref="dialogRef" />
-        <!-- =================== -->
     </HaSection>
 </template>
 
@@ -187,7 +153,6 @@ import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
 import { useUI } from '@/mixins/globalMixin'
 const { formatPrice } = useUI()
-import PopupRemove from '../components/PopupRemove.vue'
 
 const router = useRouter()
 

@@ -20,42 +20,20 @@
             @open="handleOpen"
             @close="handleClose"
         >
-            <router-link to="DashboardList">
-                <el-menu-item index="homepage">
-                    <el-icon><House /></el-icon>
-                    <template #title><span>Trang chủ</span></template>
-                </el-menu-item>
-            </router-link>
-            <router-link :to="{ name: 'ProjectList' }">
-                <el-menu-item index="projects">
-                    <el-icon><OfficeBuilding /></el-icon>
-                    <template #title><span>Quản lý Bài đăng</span></template>
-                </el-menu-item>
-            </router-link>
-            <router-link :to="{ name: 'ProjectList' }">
-                <el-menu-item index="projects1">
-                    <el-icon><Star /></el-icon>
-                    <template #title><span>Quản lý Đánh Giá</span></template>
-                </el-menu-item>
-            </router-link>
-            <router-link :to="{ name: 'ProjectList' }">
-                <el-menu-item index="projects2">
-                    <el-icon><Coin /></el-icon>
-                    <template #title><span>Quản lý Tài khoản</span></template>
-                </el-menu-item>
-            </router-link>
-            <router-link :to="{ name: 'ProjectList' }">
-                <el-menu-item index="projects3">
-                    <el-icon><DataAnalysis /></el-icon>
-                    <template #title><span>Báo cáo & Thống kê</span></template>
-                </el-menu-item>
-            </router-link>
-            <router-link :to="{ name: 'ProjectList' }">
-                <el-menu-item index="projects4">
-                    <el-icon><Memo /></el-icon>
-                    <template #title><span>Hướng dẫn sử dụng</span></template>
-                </el-menu-item>
-            </router-link>
+            <div v-for="(item, index) in menuList" :key="index" :index="item.index">
+                <router-link :to="{ name: item.name }">
+                    <el-menu-item
+                        :class="{
+                            'is-active': setActive(item.actives),
+                        }"
+                    >
+                        <el-icon><component :is="item.icon" /></el-icon>
+                        <template #title
+                            ><span>{{ item.title }}</span></template
+                        >
+                    </el-menu-item>
+                </router-link>
+            </div>
         </el-menu>
 
         <div class="menu__button" id="menu-button">
@@ -91,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { Document, Menu as IconMenu, Location, Setting } from '@element-plus/icons-vue'
 import {
     DArrowRight,
@@ -100,9 +78,12 @@ import {
     Star,
     DataAnalysis,
     Memo,
-    OfficeBuilding,
     Coin,
+    Present,
 } from '@element-plus/icons-vue'
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const isCollapse = ref(true)
 // khai báo emit
@@ -128,12 +109,69 @@ const changeCollapse = () => {
     emit('collapsed')
 }
 
-const onDirect = (path: any) => {
-    if (path == '/sign-in') {
-        console.log('forceLogout')
-    } else {
-        // if (this.$route.path !== path) this.$router.push(path)
-    }
+// const onDirect = (path: any) => {
+//     if (path == '/sign-in') {
+//         console.log('forceLogout')
+//     } else {
+//         // if (this.$route.path !== path) this.$router.push(path)
+//     }
+// }
+
+const menuList = computed(() => [
+    {
+        title: 'Trang chủ',
+        icon: House,
+        index: 'homepage',
+        name: 'DashboardList',
+        actives: ['DashboardList'],
+    },
+    {
+        title: 'Quản lý Bài đăng',
+        icon: Document,
+        index: 'projects',
+        name: 'ProjectList',
+        actives: ['ProjectList', 'ProjectCreate', 'ProjectEdit'],
+    },
+    {
+        title: 'Quản lý Đánh Giá',
+        icon: Star,
+        index: 'reviews',
+        name: 'ReviewList',
+        actives: ['ReviewList'],
+    },
+    {
+        title: 'Quản lý Tài khoản',
+        icon: Coin,
+        index: 'users',
+        name: 'UserList',
+        actives: ['UserList'],
+    },
+    {
+        title: 'Quản lý Dịch vụ',
+        icon: Present,
+        index: 'services',
+        name: 'ServiceList',
+        actives: ['ServiceList'],
+    },
+    {
+        title: 'Báo cáo & Thống kê',
+        icon: DataAnalysis,
+        index: 'reports',
+        name: 'ProjectList',
+        actives: ['ProjectList'],
+    },
+    {
+        title: 'Hướng dẫn sử dụng',
+        icon: Memo,
+        index: 'guides',
+        name: 'ProjectList',
+        actives: ['ProjectList'],
+    },
+])
+
+const setActive = (actives: string[]): boolean => {
+    if (!actives || actives.length === 0) return false
+    return actives.includes(router.currentRoute.value.name as string)
 }
 </script>
 

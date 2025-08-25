@@ -8,7 +8,7 @@
                     </el-link>
                 </div>
                 <div>
-                    <p class="title2 neutral-900">Tạo phòng mới</p>
+                    <p class="title2 neutral-900">Tạo Tin Đăng mới</p>
                 </div>
             </div>
 
