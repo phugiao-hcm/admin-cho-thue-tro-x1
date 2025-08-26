@@ -1,38 +1,73 @@
+<template>
+    <div class="map-container">
+        <!-- Input autocomplete -->
+        <input
+            ref="autocompleteInput"
+            type="text"
+            placeholder="Nhập địa chỉ..."
+            class="autocomplete-input"
+        />
+
+        <!-- Map -->
+        <div ref="mapRef" class="map"></div>
+    </div>
+</template>
+
 <script setup lang="ts">
-import { GoogleMap, Marker } from 'vue3-google-map'
-import type { PropType } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useGoogleMaps } from '@/composables/useGoogleMaps.ts'
 
-// API key khai báo fix sẵn (nên để trong .env)
-// const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-const API_KEY = 'AIzaSyD2_kkzvfEJmLHoOV4ok9LfdoaNxTFcGac'
+const apiKey = 'AIzaSyD2_kkzvfEJmLHoOV4ok9LfdoaNxTFcGac' // 🔑 thay bằng key thật
 
-// Truyền props từ ngoài vào để tái sử dụng
-const props = defineProps({
-  center: {
-    type: Object as PropType<{ lat: number; lng: number }>,
-    required: true,
-  },
-  zoom: {
-    type: Number,
-    default: 14,
-  },
-  height: {
-    type: String,
-    default: '500px',
-  },
-  width: {
-    type: String,
-    default: '100%',
-  },
-  showMarker: {
-    type: Boolean,
-    default: true,
-  },
+const mapRef = ref<HTMLDivElement | null>(null)
+const autocompleteInput = ref<HTMLInputElement | null>(null)
+
+const { loadScript } = useGoogleMaps(apiKey)
+
+onMounted(async () => {
+    await loadScript()
+
+    if (!mapRef.value || !autocompleteInput.value) return
+
+    // Khởi tạo Map
+    const map = new google.maps.Map(mapRef.value, {
+        center: { lat: 10.762622, lng: 106.660172 }, // Hồ Chí Minh
+        zoom: 13,
+    })
+
+    // Khởi tạo Autocomplete
+    const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.value, {
+        fields: ['geometry', 'formatted_address'],
+    })
+
+    autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace()
+        if (!place.geometry || !place.geometry.location) return
+
+        map.setCenter(place.geometry.location)
+        new google.maps.Marker({
+            position: place.geometry.location,
+            map,
+        })
+    })
 })
 </script>
 
-<template>
-  <GoogleMap :api-key="API_KEY" :center="center" :zoom="zoom" :style="{ width, height }">
-    <Marker v-if="showMarker" :options="{ position: center }" />
-  </GoogleMap>
-</template>
+<style scoped>
+.map-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.autocomplete-input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+.map {
+    width: 100%;
+    height: 400px;
+    border-radius: 8px;
+}
+</style>

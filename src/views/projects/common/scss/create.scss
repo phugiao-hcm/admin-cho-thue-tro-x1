@@ -96,7 +96,8 @@ $tablet: 992px;
 }
 .image-box {
   position: relative;
-  height: 120px;
+  height: 180px;
+  width: 180px;
   border-radius: 6px;
   overflow: hidden;
   border: 2px solid transparent;
@@ -116,13 +117,12 @@ $tablet: 992px;
   gap: 4px;
   justify-content: space-between;
   width: 100%;
-  padding: 4px;
+  padding: 6px 4px 4px;
+  background: #00000066;
+
+  color: white;
 }
 .image-actions i {
-  background: #00000066;
-  padding: 4px;
-  border-radius: 4px;
-  font-size: 14px;
   cursor: pointer;
 }
 .image-order {

@@ -24,13 +24,7 @@
             </div>
         </div>
 
-        <el-form
-            :model="form"
-            :rules="rules"
-            ref="form"
-            class="my-form"
-            v-loading="ui.isLoadingCancellationPolicySetupInfo"
-        >
+        <el-form :model="form" :rules="rules" ref="formRef">
             <div class="custom-flex">
                 <div class="flex-left">
                     <p class="body-medium-semi-bold neutral-700">Thông tin phòng</p>
@@ -47,7 +41,7 @@
                             </p>
                         </div>
                         <div>
-                            <el-form-item prop="name">
+                            <el-form-item prop="nameAccommodation">
                                 <el-input
                                     :placeholder="'Nhập tên cơ sở lưu trú'"
                                     v-model="form.nameAccommodation"
@@ -63,7 +57,7 @@
                                     Số lượng phòng
                                     <span class="secondary-red-600">*</span>
                                 </p>
-                                <el-form-item prop="numOfRoomHotel">
+                                <el-form-item prop="numberOfRooms">
                                     <InputNumber
                                         :algin="'left'"
                                         :min="1"
@@ -79,7 +73,7 @@
                                     Diện tích phòng
                                     <span class="secondary-red-600">*</span>
                                 </p>
-                                <el-form-item prop="square">
+                                <el-form-item prop="area">
                                     <InputNumber
                                         :algin="'left'"
                                         :suffix="` m²`"
@@ -101,7 +95,7 @@
                                     Họ và tên người đại diện
                                     <span class="secondary-red-600">*</span>
                                 </p>
-                                <el-form-item prop="numOfRoomHotel">
+                                <el-form-item prop="fullName">
                                     <el-input
                                         :placeholder="'Nhập số lượng phòng'"
                                         v-model="form.fullName"
@@ -113,7 +107,7 @@
                                     Giá thuê phòng
                                     <span class="secondary-red-600">*</span>
                                 </p>
-                                <el-form-item prop="square">
+                                <el-form-item prop="price">
                                     <InputRoundMoney
                                         :suffix="'/1 tháng'"
                                         :algin="'left'"
@@ -188,7 +182,7 @@
                             </p>
                         </div>
                         <div>
-                            <el-form-item prop="name">
+                            <el-form-item prop="address">
                                 <el-input
                                     :placeholder="'Nhập địa chỉ'"
                                     v-model="form.address"
@@ -249,25 +243,6 @@
                                 </el-select>
                             </div>
                         </div>
-
-                        <div style="margin-top: 12px">
-                            <el-form-item>
-                                <el-tag
-                                    class="el-tag__square"
-                                    style="margin: 0 12px 8px 0"
-                                    :isDisabled="true"
-                                    v-for="(item, index) in facilityListSelected"
-                                    :key="index"
-                                    :disable-transitions="false"
-                                    closable
-                                    @close="handleRemoveFacility(item, index)"
-                                >
-                                    <span class="body-small-regular primary-600">{{
-                                        item.name
-                                    }}</span>
-                                </el-tag>
-                            </el-form-item>
-                        </div>
                     </div>
 
                     <div class="custom-card">
@@ -299,33 +274,27 @@
 
                                     <div class="image-actions">
                                         <div>
-                                            <div v-if="!image.firstDisplay">
+                                            <div>
                                                 <el-tooltip
-                                                    :content="'room_type.set_as_default_image'"
+                                                    content="Đặt làm ảnh đại diện"
                                                     placement="top"
                                                 >
-                                                    <i
-                                                        class="el-icon-star-on"
-                                                        :class="
-                                                            image.firstDisplay
-                                                                ? 'secondary-orange-600'
-                                                                : 'neutral-0'
-                                                        "
+                                                    <el-icon
+                                                        class="secondary-orange-600"
                                                         @click="setAsMain(image)"
-                                                    />
+                                                        ><Star
+                                                    /></el-icon>
                                                 </el-tooltip>
                                             </div>
                                         </div>
 
                                         <div>
-                                            <el-tooltip
-                                                :content="'room_type.delete_image'"
-                                                placement="top"
-                                            >
-                                                <i
-                                                    class="el-icon-delete neutral-0"
+                                            <el-tooltip content="Xóa ảnh" placement="top">
+                                                <el-icon
+                                                    class="neutral-0"
                                                     @click="deleteImage(image)"
-                                                />
+                                                    ><Delete
+                                                /></el-icon>
                                             </el-tooltip>
                                         </div>
                                     </div>
@@ -333,12 +302,11 @@
                                     <div v-if="image.firstDisplay" class="main-label flex-center">
                                         <i class="el-icon-star-on secondary-orange-500" />
                                         <p class="small-cap-small-cap secondary-orange-600">
-                                            'room_type.default_image
+                                            Ảnh đại diện
                                         </p>
                                     </div>
                                 </div>
 
-                                <!-- Thêm ảnh -->
                                 <div>
                                     <CropperFixed
                                         ref="cropperFixedRef"
@@ -348,7 +316,7 @@
                                         :typeUpload="'avatar-upload-custom'"
                                     >
                                         <div class="image-box add-image">
-                                            <i class="el-icon-plus" style="font-size: 26px"></i>
+                                            <el-icon><Plus /></el-icon>
                                         </div>
                                     </CropperFixed>
                                 </div>
@@ -356,218 +324,171 @@
                         </el-form-item>
                     </div>
 
+                    <div>
+                        <!-- <gmap-autocomplete
+                            placeholder="Tìm vị trí..."
+                            class="el-input__inner"
+                            @place_changed="handleChangePlace"
+                        >
+                        </gmap-autocomplete> -->
+                    </div>
                     <div class="custom-card">
-                        <GoogleMap :center="center" :zoom="12" height="400px" width="100%" />
+                        <!-- <GoogleMap :center="center" :zoom="12" height="400px" width="100%" /> -->
+                        <!-- <BaseMap @update:location="onLocationChange" /> -->
+                        <GoogleMapWithAutocomplete />
                     </div>
                 </div>
             </div>
         </el-form>
     </ha-offset-section>
 </template>
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import type { FormInstance, FormRules } from 'element-plus'
 
-
-<script>
 import HaOffsetSection from '@/components/global/HaOffsetSection.vue'
 import InputNumber from '@/components/global/InputNumber.vue'
 import InputRoundMoney from '@/components/global/InputRoundMoney.vue'
-import GoogleMap from '@/components/global/GoogleMap.vue'
 import CropperFixed from '@/components/global/cropper-fixed/index.vue'
-import { Back } from '@element-plus/icons-vue'
+import { Back, Plus, Delete, Star } from '@element-plus/icons-vue'
 import { TYPE_ROOM_OPTIONS, DIRECTION_ROOM_OPTIONS, FACILITY_ROOM_OPTIONS } from '../const'
 import { addProject } from './api'
+import { useUI } from '@/mixins/globalMixin'
+import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
 
-export default {
-    name: 'CreateRoomType',
-    components: {
-        HaOffsetSection,
-        InputNumber,
-        InputRoundMoney,
-        GoogleMap,
-        CropperFixed,
-        Back,
-    },
-    data(vm) {
-        // const validateRequiredImages = (_rule, _value, callback) => {
-        //     if (vm.form.imageList.length === 0) {
-        //         callback(new Error('validation.required'))
-        //     } else {
-        //         callback()
-        //     }
-        // }
+const router = useRouter()
+const route = useRoute()
+const { generateRandomSuffix, onResetValidateField, validateRequired } = useUI()
 
-        return {
-            TYPE_ROOM_OPTIONS,
-            DIRECTION_ROOM_OPTIONS,
-            FACILITY_ROOM_OPTIONS,
+// Wrap validateRequired to callback style for async-validator
+const validateRequiredCallback = (rule: any, value: any, callback: any) => {
+    validateRequired(rule, value)
+        .then(() => callback())
+        .catch((err: any) => callback(err))
+}
 
-            center: { lat: 10.762622, lng: 106.660172 }, // Vị trí mặc định (TP.HCM)
+// refs
+const formRef = ref<FormInstance>()
+const cropperFixedRef = ref<InstanceType<typeof CropperFixed> | null>(null)
 
-            ui: {
-                isSubmitting: false,
-                isSubmittingDraft: false,
+const ui = reactive({
+    isSubmitting: false,
+    isLoadingRoomView: false,
+    isLoadingRoomBed: false,
+    isLoadingFacility: false,
+    isLoadingCancellationPolicySetupInfo: false,
+})
 
-                isLoadingRoomView: false,
-                isLoadingRoomBed: false,
-                isLoadingFacility: false,
-            },
+interface ProjectForm {
+    hotelSn: number | null
+    nameAccommodation: string | null
+    numberOfRooms: number | null
+    area: number | null
+    fullName: string | null
+    roomType: string | null
+    viewRoom: string | null
+    description: string | null
+    facilities: string[]
+    price: number | null
+    address: string | null
+    imageList: any[]
+    latitude: number | null
+    longitude: number | null
+}
 
-            form: {
-                hotelSn: this.$route.query.hotelSn ? Number(this.$route.query.hotelSn) : null,
-                // Biến mới từ Thành
-                nameAccommodation: null,
-                numberOfRooms: null,
-                area: null,
-                fullName: null,
-                roomType: null,
-                viewRoom: null,
-                description: null,
-                facilities: null,
-                price: null,
-                address: null,
-                imageList: [],
+const form = reactive<ProjectForm>({
+    hotelSn: route.query.hotelSn ? Number(route.query.hotelSn) : null,
+    nameAccommodation: null,
+    numberOfRooms: null,
+    area: null,
+    fullName: null,
+    roomType: null,
+    viewRoom: null,
+    description: null,
+    facilities: [],
+    price: null,
+    address: null,
+    imageList: [],
+    latitude: null,
+    longitude: null,
+})
 
-                latitude: null,
-                longitude: null,
-            },
+const rules: FormRules = {
+    nameAccommodation: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    numberOfRooms: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    area: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    fullName: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    price: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    roomType: [{ validator: validateRequiredCallback, trigger: ['change'] }],
+    address: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    imageList: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
+}
 
-            maxNumHourList: Array.from({ length: 13 }, (_, i) => i + 1),
+const setAsMain = (image?: any) => {
+    form.imageList.forEach((img: any) => (img.firstDisplay = 0))
+    if (image) image.firstDisplay = 1
+    if (!form.imageList.some((img: any) => img.firstDisplay === 1) && form.imageList.length > 0) {
+        form.imageList[0].firstDisplay = 1
+    }
+}
 
-            rules: {
-                nameAccommodation: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['blur'],
-                    },
-                ],
-                numberOfRooms: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['blur'],
-                    },
-                ],
-                area: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['blur'],
-                    },
-                ],
-                fullName: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['blur'],
-                    },
-                ],
-                price: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['blur'],
-                    },
-                ],
-                roomType: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['change'],
-                    },
-                ],
-                address: [
-                    {
-                        validator: vm.validateRequired,
-                        trigger: ['blur'],
-                    },
-                ],
-                // imageList: [
-                //     {
-                //         validator: validateRequiredImages,
-                //         trigger: ['blur', 'change'],
-                //     },
-                // ],
-            },
+const resultThumbnail = (result: File) => {
+    const newImage = {
+        file: result,
+        url: URL.createObjectURL(result),
+        fileName: `${generateRandomSuffix()}-${result.name}`,
+        firstDisplay: 0,
+    }
+    console.log('aaa :', form)
+    if (form.imageList.length < 11) {
+        form.imageList.push(newImage)
+        onResetValidateField('imageList')
+    }
+    onRefreshImage()
+}
+
+const deleteImage = (image: any) => {
+    form.imageList = form.imageList.filter((img: any) => img.fileName !== image.fileName)
+    onRefreshImage()
+}
+
+const onRefreshImage = () => {
+    setAsMain()
+    cropperFixedRef.value?.resetImage()
+}
+
+const onChangeNumOfRoomHotel = () => {}
+const onChangeSquare = () => {}
+const onChangePrice = () => {}
+
+const onBack = () => {
+    router.go(-1)
+}
+
+const preHandleBeforeSubmit = () => {
+    formRef.value?.validate((valid) => {
+        if (!valid) return
+        onSubmit()
+    })
+}
+
+const onSubmit = async () => {
+    ui.isSubmitting = true
+    try {
+        const id = await addProject(form)
+        if (id) {
+            router.push({ name: 'ProjectList' })
         }
-    },
-    methods: {
-        // ----------- START HANDLE IMAGE -----------
-        setAsMain(image) {
-            if (image) {
-                this.form.imageList.forEach((img) => (img.firstDisplay = 0))
-                image.firstDisplay = 1
-            }
-
-            // Kiểm tra xem có phần tử nào firstDisplay === true không
-            const hasMain = this.form.imageList.some((img) => img.firstDisplay === 1)
-
-            // Nếu không có phần tử nào có firstDisplay = true thì set cái đầu tiên thành true
-            if (!hasMain && this.form.imageList.length > 0) {
-                this.form.imageList[0].firstDisplay = 1
-            }
-        },
-        resultThumbnail(result) {
-            const newImage = {
-                file: result,
-                url: URL.createObjectURL(result),
-                fileName: `${this.generateRandomSuffix()}-${result.name}`,
-                firstDisplay: 0,
-            }
-
-            if (this.form.imageList.length < 11) {
-                this.form.imageList.push(newImage)
-
-                this.onResetValidateField('imageList')
-            }
-
-            this.onRefreshImage()
-        },
-        deleteImage(image) {
-            this.form.imageList = this.form.imageList.filter(
-                (img) => img.fileName !== image.fileName
-            )
-
-            this.onRefreshImage()
-        },
-
-        onRefreshImage() {
-            this.setAsMain()
-            this.$refs.cropperFixedRef.resetImage()
-        },
-        // ----------- END HANDLE IMAGE -----------
-
-        onChangeNumOfRoomHotel(value) {
-            this.form.numberOfRooms = value
-        },
-        onChangeSquare(value) {
-            this.form.area = value
-        },
-        onChangePrice(value) {
-            this.form.price = value
-        },
-
-        onBack() {
-            this.$router.go(-1)
-        },
-        preHandleBeforeSubmit() {
-            this.$refs.form.validate((valid) => {
-                if (!valid) {
-                    return false
-                }
-                this.onSubmit()
-            })
-        },
-
-        async onSubmit() {
-            this.ui.isSubmitting = true
-            try {
-                const id = await addProject(this.form)
-                if (id) {
-                    this.$router.push({ name: 'ProjectList' })
-                }
-            } catch (error) {
-                alert('Có lỗi xảy ra: ' + error)
-            } finally {
-                this.ui.isSubmitting = false
-            }
-        },
-    },
+    } catch (error) {
+        alert('Có lỗi xảy ra: ' + error)
+    } finally {
+        ui.isSubmitting = false
+    }
 }
 </script>
+
+
 
 <style lang="scss">
 @use '../common/scss/create.scss';
