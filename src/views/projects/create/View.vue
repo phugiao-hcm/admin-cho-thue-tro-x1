@@ -356,17 +356,24 @@ import { TYPE_ROOM_OPTIONS, DIRECTION_ROOM_OPTIONS, FACILITY_ROOM_OPTIONS } from
 import { addProject } from './api'
 import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
+import { uploadImage } from '@/apis/upload.ts'
 
 const router = useRouter()
 const route = useRoute()
-const { generateRandomSuffix, onResetValidateField, validateRequired } = useUI()
+// const { generateRandomSuffix, onResetValidateField, validateRequired } = useUI()
+const { generateRandomSuffix, onResetValidateField } = useUI()
 
 // Wrap validateRequired to callback style for async-validator
-const validateRequiredCallback = (rule: any, value: any, callback: any) => {
-    validateRequired(rule, value)
-        .then(() => callback())
-        .catch((err: any) => callback(err))
-}
+// const validateRequiredCallback = (rule: any, value: any, callback: any) => {
+//     validateRequired(rule, value)
+//         .then(() => callback())
+//         .catch((err: any) => callback(err))
+// }
+
+// const validateNumberRequiredCallback = (rule: any, value: any, callback: any) => {
+//     console.log('value', value)
+//     if (!value) throw new Error('Không bỏ trống')
+// }
 
 // refs
 const formRef = ref<FormInstance>()
@@ -415,14 +422,14 @@ const form = reactive<ProjectForm>({
 })
 
 const rules: FormRules = {
-    nameAccommodation: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    numberOfRooms: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    area: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    fullName: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    price: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    roomType: [{ validator: validateRequiredCallback, trigger: ['change'] }],
-    address: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    imageList: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
+    // nameAccommodation: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    // numberOfRooms: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
+    // area: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
+    // fullName: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    // price: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
+    // roomType: [{ validator: validateRequiredCallback, trigger: ['change'] }],
+    // address: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+    // imageList: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
 }
 
 const setAsMain = (image?: any) => {
@@ -440,7 +447,6 @@ const resultThumbnail = (result: File) => {
         fileName: `${generateRandomSuffix()}-${result.name}`,
         firstDisplay: 0,
     }
-    console.log('aaa :', form)
     if (form.imageList.length < 11) {
         form.imageList.push(newImage)
         onResetValidateField('imageList')
@@ -478,12 +484,29 @@ const onSubmit = async () => {
     try {
         const id = await addProject(form)
         if (id) {
+            const onlyFiles = form.imageList.map((item) => item.file)
+            if (onlyFiles.length > 0) {
+                onlyFiles.forEach((file) => {
+                    onUpload(file)
+                })
+            }
+
             router.push({ name: 'ProjectList' })
         }
     } catch (error) {
         alert('Có lỗi xảy ra: ' + error)
     } finally {
         ui.isSubmitting = false
+    }
+}
+
+const onUpload = async (imageList: File) => {
+    if (imageList) {
+        try {
+            await uploadImage(imageList)
+        } catch (err) {
+            console.error('Upload failed:', err)
+        }
     }
 }
 </script>
