@@ -3,9 +3,10 @@ import app from '@/plugins/firebaseConfig' // assuming default export is your Fi
 
 const db = getFirestore(app)
 
-export async function addProject(project: Omit<any, 'id'>): Promise<string> {
+export async function addPost(project: Omit<any, 'id'>): Promise<string> {
   try {
-    const docRef = await addDoc(collection(db, 'projects'), {
+    console.log('project :', project)
+    const docRef = await addDoc(collection(db, 'posts'), {
       ...project,
       createdAt: Timestamp.now(), // thêm timestamp
     })

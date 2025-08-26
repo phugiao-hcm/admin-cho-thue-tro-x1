@@ -1,7 +1,7 @@
 import { collection, getDocs, getFirestore } from 'firebase/firestore'
 import app from '@/plugins/firebaseConfig' // assuming default export is your FirebaseApp
 
-export interface Projects {
+export interface Posts {
   id: string
   name: string
   location: string
@@ -12,11 +12,11 @@ export interface Projects {
 
 const db = getFirestore(app) // get Firestore instance from FirebaseApp
 
-export async function getProjectList(): Promise<Projects[]> {
-  const querySnapshot = await getDocs(collection(db, 'projects'))
+export async function getProjectList(): Promise<Posts[]> {
+  const querySnapshot = await getDocs(collection(db, 'posts'))
 
   return querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...(doc.data() as Omit<Projects, 'id'>),
+    ...(doc.data() as Omit<Posts, 'id'>),
   }))
 }

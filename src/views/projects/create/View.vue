@@ -353,7 +353,7 @@ import InputRoundMoney from '@/components/global/InputRoundMoney.vue'
 import CropperFixed from '@/components/global/cropper-fixed/index.vue'
 import { Back, Plus, Delete, Star } from '@element-plus/icons-vue'
 import { TYPE_ROOM_OPTIONS, DIRECTION_ROOM_OPTIONS, FACILITY_ROOM_OPTIONS } from '../const'
-import { addProject } from './api'
+import { addPost } from './api'
 import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
 import { uploadImage } from '@/apis/upload.ts'
@@ -388,7 +388,6 @@ const ui = reactive({
 })
 
 interface ProjectForm {
-    hotelSn: number | null
     nameAccommodation: string | null
     numberOfRooms: number | null
     area: number | null
@@ -405,7 +404,6 @@ interface ProjectForm {
 }
 
 const form = reactive<ProjectForm>({
-    hotelSn: route.query.hotelSn ? Number(route.query.hotelSn) : null,
     nameAccommodation: null,
     numberOfRooms: null,
     area: null,
@@ -482,9 +480,12 @@ const preHandleBeforeSubmit = () => {
 const onSubmit = async () => {
     ui.isSubmitting = true
     try {
-        const id = await addProject(form)
+        const onlyFiles = form.imageList.map((item) => item.file)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        form.imageList = form.imageList.map(({ file, ...rest }) => rest)
+
+        const id = await addPost(form)
         if (id) {
-            const onlyFiles = form.imageList.map((item) => item.file)
             if (onlyFiles.length > 0) {
                 onlyFiles.forEach((file) => {
                     onUpload(file)
