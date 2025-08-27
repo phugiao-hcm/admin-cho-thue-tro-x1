@@ -57,7 +57,7 @@
                     </template>
                     <template #default="scope">
                         <el-image
-                            :src="scope.row.images ? scope.row.images[0] : ''"
+                            :src="scope.row.imageList ? scope.row.imageList[0].imagePath : ''"
                             style="width: 100px"
                             fit="cover"
                         />
@@ -72,7 +72,7 @@
                             type="primary"
                             underline="never"
                             @click="onDirectProjectDetail(scope.row.id)"
-                            >{{ scope.row.name }}</el-link
+                            >{{ scope.row.nameAccommodation }}</el-link
                         >
                     </template>
                 </el-table-column>
@@ -227,6 +227,7 @@ const fetchProjects = async () => {
     try {
         ui.isLoading = true
         tableData.value = await getProjectList()
+        console.log('tableData :', tableData)
     } catch (e) {
         console.error(e)
     } finally {

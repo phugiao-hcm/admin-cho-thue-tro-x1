@@ -324,18 +324,19 @@
                         </el-form-item>
                     </div>
 
-                    <div>
-                        <!-- <gmap-autocomplete
-                            placeholder="Tìm vị trí..."
-                            class="el-input__inner"
-                            @place_changed="handleChangePlace"
-                        >
-                        </gmap-autocomplete> -->
+                    <div class="custom-card">
+                        <div>
+                            <p class="body-small-regular neutral-500">
+                                Thêm vị trí trên bản đồ
+                                <span class="secondary-red-600">*</span>
+                            </p>
+                            <p class="body-small-regular neutral-500">
+                                Bản đồ được chọn bằng cách nhập địa điểm bên dưới.
+                            </p>
+                        </div>
                     </div>
                     <div class="custom-card">
-                        <!-- <GoogleMap :center="center" :zoom="12" height="400px" width="100%" /> -->
-                        <!-- <BaseMap @update:location="onLocationChange" /> -->
-                        <GoogleMapWithAutocomplete />
+                        <GoogleMapWithAutocomplete @update:location="handleLocation" />
                     </div>
                 </div>
             </div>
@@ -345,6 +346,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 
 import HaOffsetSection from '@/components/global/HaOffsetSection.vue'
@@ -352,7 +354,12 @@ import InputNumber from '@/components/global/InputNumber.vue'
 import InputRoundMoney from '@/components/global/InputRoundMoney.vue'
 import CropperFixed from '@/components/global/cropper-fixed/index.vue'
 import { Back, Plus, Delete, Star } from '@element-plus/icons-vue'
-import { TYPE_ROOM_OPTIONS, DIRECTION_ROOM_OPTIONS, FACILITY_ROOM_OPTIONS } from '../const'
+import {
+    TYPE_ROOM_OPTIONS,
+    DIRECTION_ROOM_OPTIONS,
+    FACILITY_ROOM_OPTIONS,
+    PROJECT_STATUS,
+} from '../const'
 import { addPost } from './api'
 import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
@@ -401,6 +408,7 @@ interface ProjectForm {
     imageList: any[]
     latitude: number | null
     longitude: number | null
+    status: number | null
 }
 
 const form = reactive<ProjectForm>({
@@ -417,6 +425,7 @@ const form = reactive<ProjectForm>({
     imageList: [],
     latitude: null,
     longitude: null,
+    status: PROJECT_STATUS.APPROVED,
 })
 
 const rules: FormRules = {
@@ -462,9 +471,15 @@ const onRefreshImage = () => {
     cropperFixedRef.value?.resetImage()
 }
 
-const onChangeNumOfRoomHotel = () => {}
-const onChangeSquare = () => {}
-const onChangePrice = () => {}
+const onChangeNumOfRoomHotel = (value: number) => {
+    form.numberOfRooms = Number(value)
+}
+const onChangeSquare = (value: number) => {
+    form.area = Number(value)
+}
+const onChangePrice = (value: number) => {
+    form.price = Number(value)
+}
 
 const onBack = () => {
     router.go(-1)
@@ -481,16 +496,19 @@ const onSubmit = async () => {
     ui.isSubmitting = true
     try {
         const onlyFiles = form.imageList.map((item) => item.file)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        form.imageList = form.imageList.map(({ file, ...rest }) => rest)
+        if (onlyFiles.length > 0) {
+            await uploadAll() // ✅ đợi upload xong rồi mới lưu
+        }
 
+        // gọi API lưu post khi đã có link ảnh
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        form.imageList = form.imageList.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
         const id = await addPost(form)
         if (id) {
-            if (onlyFiles.length > 0) {
-                onlyFiles.forEach((file) => {
-                    onUpload(file)
-                })
-            }
+            ElMessage({
+                message: 'Thêm Tin đăng mới thành công!',
+                type: 'success',
+            })
 
             router.push({ name: 'ProjectList' })
         }
@@ -501,14 +519,36 @@ const onSubmit = async () => {
     }
 }
 
-const onUpload = async (imageList: File) => {
-    if (imageList) {
+// Cập nhật list ảnh
+const uploadAll = async () => {
+    const onlyFiles = form.imageList.map((item) => item.file)
+    console.log('onlyFiles00 :', onlyFiles)
+
+    const uploadedPaths = await Promise.all(onlyFiles.map((file) => onUpload(file)))
+
+    // gán lại vào form.imageList
+    form.imageList = form.imageList.map((item, index) => ({
+        ...item,
+        imagePath: uploadedPaths[index], // link ảnh sau khi upload
+    }))
+}
+
+const onUpload = async (image: File) => {
+    if (image) {
         try {
-            await uploadImage(imageList)
+            const imageUpdated = await uploadImage(image) // API trả về link
+            return imageUpdated
         } catch (err) {
             console.error('Upload failed:', err)
+            return null
         }
     }
+    return null
+}
+
+const handleLocation = (location: { lat: number; lng: number }) => {
+    form.latitude = location.lat
+    form.longitude = location.lng
 }
 </script>
 
