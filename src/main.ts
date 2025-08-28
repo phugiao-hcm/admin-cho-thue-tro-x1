@@ -9,6 +9,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { useUI } from '@/mixins/globalMixin'
 
+console.log('12312312312312312312312312312')
+
 const app = createApp(App)
 
 app.use(router)
