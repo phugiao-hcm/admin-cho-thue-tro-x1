@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "vite build && rm -rf docs && cp -r dist docs",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
