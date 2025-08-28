@@ -2,6 +2,7 @@
 
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { h } from 'vue'
+import DashboardList from '@/views/dashboard/list/View.vue'
 
 // routerView dùng làm parent container
 export const routerView = {
@@ -15,11 +16,10 @@ export const routerView = {
 //   { path: '/', redirect: `/dashboard/list` }, // default route
 // ]
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/dashboard/list' },
+  // { path: '/', redirect: '/dashboard/list' },
   {
-    path: '/dashboard',
-    component: routerView,
-    children: [{ path: 'list', component: () => import('@/views/dashboard/list/View.vue') }],
+    path: '/',
+    component: DashboardList,
   },
 ]
 
