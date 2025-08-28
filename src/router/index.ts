@@ -12,7 +12,7 @@ export const routerView = {
 
 // Routes cơ bản
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/dashboard/list' }, // default route
+  { path: '/', redirect: '/admin-cho-thue-tro-x1/dashboard/list' }, // default route
 ]
 
 const router = createRouter({

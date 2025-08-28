@@ -1,9 +1,10 @@
 import router from '@/router'
 import { useBreadcrumb } from '@/router/breadcrumb'
+import { BASE_ADMIN_PATH } from '@/utils/const'
 const { project } = useBreadcrumb()
 
 router.addRoute({
-  path: '/projects/list',
+  path: `/${BASE_ADMIN_PATH}/projects/list`,
   name: 'ProjectList',
   meta: { requiresAuth: true },
   beforeEnter(to, from, next) {
