@@ -12,11 +12,7 @@ export const routerView = {
 }
 
 // Routes cơ bản
-// const routes: RouteRecordRaw[] = [
-//   { path: '/', redirect: `/dashboard/list` }, // default route
-// ]
 const routes: RouteRecordRaw[] = [
-  // { path: '/', redirect: '/dashboard/list' },
   {
     path: '/',
     component: DashboardList,
@@ -24,7 +20,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 })
 
