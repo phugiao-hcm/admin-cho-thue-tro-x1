@@ -2,6 +2,7 @@
 
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { h } from 'vue'
+import { BASE_ADMIN_PATH } from '@/utils/const'
 
 // routerView dùng làm parent container
 export const routerView = {
@@ -12,11 +13,11 @@ export const routerView = {
 
 // Routes cơ bản
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/admin-cho-thue-tro-x1/dashboard/list' }, // default route
+  { path: '/', redirect: `/${BASE_ADMIN_PATH}/dashboard/list` }, // default route
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
