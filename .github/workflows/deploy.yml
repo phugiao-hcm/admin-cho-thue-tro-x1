@@ -29,11 +29,22 @@ jobs:
 
       # 5. Build project
       - name: Build project
-        run: yarn build
+        run:
+          yarn build
 
-      # 6. Copy index.html → 404.html (SPA fallback)
+          # 6. Copy index.html → 404.html (SPA fallback)
       - name: SPA fallback for GitHub Pages
         run: cp dist/index.html dist/404.html
+
+      # 7. Setup Git user (fix Author identity unknown)
+      - name: Setup Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # 8. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        run: yarn deploy
 
       # 7. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
