@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
-  base: './', // 👈 thay vì "/admin-cho-thue-tro-x1/"
+  base: '/admin-cho-thue-tro-x1/', // 👈 quan trọng
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
