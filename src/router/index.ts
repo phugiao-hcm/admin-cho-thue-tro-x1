@@ -11,8 +11,16 @@ export const routerView = {
 }
 
 // Routes cơ bản
+// const routes: RouteRecordRaw[] = [
+//   { path: '/', redirect: `/dashboard/list` }, // default route
+// ]
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: `/dashboard/list` }, // default route
+  { path: '/', redirect: '/dashboard/list' },
+  {
+    path: '/dashboard',
+    component: routerView,
+    children: [{ path: 'list', component: () => import('@/views/dashboard/list/View.vue') }],
+  },
 ]
 
 const router = createRouter({
