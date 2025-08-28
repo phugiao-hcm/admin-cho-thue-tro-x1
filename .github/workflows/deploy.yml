@@ -35,7 +35,7 @@ jobs:
       - name: SPA fallback
         run: cp dist/index.html dist/404.html
 
-      # 7️⃣ Upload build folder as artifact
+      # 7️⃣ Upload build folder as artifact (to include all chunks)
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
