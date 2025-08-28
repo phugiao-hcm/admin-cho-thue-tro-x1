@@ -8,10 +8,24 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
   base: '/admin-cho-thue-tro-x1/', // 👈 quan trọng
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       manualChunks: undefined,
+  //     },
+  //   },
+  // },
   build: {
+    // Không minify JS/CSS
+    minify: false,
+    // Tách CSS ra file riêng
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        // Đặt tên file JS/CSS rõ ràng
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name][extname]',
       },
     },
   },
