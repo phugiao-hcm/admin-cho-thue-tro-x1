@@ -4,6 +4,7 @@ import DefaultLayout from './layouts/DefaultLayout.vue'
 import BlankLayout from './layouts/BlankLayout.vue'
 
 const token = '12312313'
+console.log('AP 11111111111111111111111')
 
 const layoutComponent = computed(() => {
   return token ? DefaultLayout : BlankLayout
