@@ -11,7 +11,6 @@ const layoutComponent = computed(() => {
 </script>
 
 <template>
-  bbbbbbbbbbbbbbbb
   <component :is="layoutComponent">
     <router-view />
   </component>
