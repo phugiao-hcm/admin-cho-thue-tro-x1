@@ -10,26 +10,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v4
 
+      # 2️⃣ Enable Corepack (yarn)
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Setup Node
+      # 3️⃣ Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # 5️⃣ Build project
       - name: Build project
         run: yarn build
 
+      # 6️⃣ SPA fallback: copy index.html → 404.html
+      - name: SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      # 7️⃣ Upload build folder as artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist # 👈 Vite build ra dist
+          path: ./dist
 
   deploy:
     needs: build
@@ -41,6 +51,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Deploy artifact to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
