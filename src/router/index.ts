@@ -1,6 +1,6 @@
 // export default router
 
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 import { h } from 'vue'
 import DashboardList from '@/views/dashboard/list/View.vue'
 
@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 })
 
