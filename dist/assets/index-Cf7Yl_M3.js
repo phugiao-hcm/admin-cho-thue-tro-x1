@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/View-hFKhuyD5.js","assets/index-AuwuFFdQ.js","assets/index-LHiNVF-d.css"])))=>i.map(i=>d[i]);
+import{r as t,_ as o}from"./index-AuwuFFdQ.js";import{u as m}from"./index-DeWQXN47.js";const{project:a}=m();t.addRoute({path:"/service/list",name:"ServiceList",meta:{requiresAuth:!0},beforeEnter(e,i,r){e.meta.breadcrumb=a.list(),r()},component:()=>o(()=>import("./View-hFKhuyD5.js"),__vite__mapDeps([0,1,2]))});
