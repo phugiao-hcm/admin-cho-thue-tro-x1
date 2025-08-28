@@ -1,41 +1,36 @@
 name: Deploy Vue 3 Vite to GitHub Pages
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Checkout code
       - uses: actions/checkout@v4
 
-      # 2️⃣ Enable Corepack (yarn)
       - name: Enable Corepack
         run: corepack enable
 
-      # 3️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # 5️⃣ Build project
       - name: Build project
         run: yarn build
 
-      # 6️⃣ SPA fallback: copy index.html → 404.html
       - name: SPA fallback
         run: cp dist/index.html dist/404.html
 
-      # 7️⃣ Upload build folder as artifact (to include all chunks)
+      - name: Check built files
+        run: ls -R dist
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -46,12 +41,8 @@ jobs:
     permissions:
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Deploy artifact to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
