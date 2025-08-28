@@ -7,40 +7,34 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout code
       - uses: actions/checkout@v4
 
+      # 2. Enable Corepack (yarn)
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Setup Node
+      # 3. Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 4. Install dependencies
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # 5. Build project
       - name: Build project
         run: yarn build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist # 👈 Vite build ra dist
+      # 6. Copy index.html → 404.html (SPA fallback)
+      - name: SPA fallback for GitHub Pages
+        run: cp dist/index.html dist/404.html
 
-  deploy:
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
+      # 7. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        run: yarn deploy
