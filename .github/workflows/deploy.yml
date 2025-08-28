@@ -7,42 +7,40 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout code
       - uses: actions/checkout@v4
 
-      # 2. Enable Corepack (yarn)
       - name: Enable Corepack
         run: corepack enable
 
-      # 3. Setup Node
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 4. Install dependencies
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # 5. Build project
       - name: Build project
         run: yarn build
 
-      # 6. SPA fallback for GitHub Pages
-      - name: SPA fallback
-        run: cp dist/index.html dist/404.html
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist # 👈 Vite build ra dist
 
-      # 7. Setup Git user (Author identity)
-      - name: Setup Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      # 8. Deploy to GitHub Pages using GH_TOKEN
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
