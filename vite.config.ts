@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
-  base: '/admin-cho-thue-tro-x1/', // 👈 quan trọng
+  base: '/', // 👈 quan trọng
   // build: {
   //   rollupOptions: {
   //     output: {
