@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/View-B3Qol0ir.js","assets/HaSection-D4KIcMLj.js","assets/index-_O3ivw8j.js","assets/index-BIeKC8d9.css","assets/HaSection-CSOY796e.css"])))=>i.map(i=>d[i]);
+import{r as o,_ as a}from"./index-_O3ivw8j.js";o.addRoute({path:"/dashboard/list",name:"DashboardList",component:()=>a(()=>import("./View-B3Qol0ir.js"),__vite__mapDeps([0,1,2,3,4]))});

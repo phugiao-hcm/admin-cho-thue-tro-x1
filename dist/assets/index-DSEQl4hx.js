@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/View-BF2CxAke.js","assets/HaSection-D4KIcMLj.js","assets/index-_O3ivw8j.js","assets/index-BIeKC8d9.css","assets/HaSection-CSOY796e.css","assets/View-LLyyeFRa.css"])))=>i.map(i=>d[i]);
+import{r as t,_ as o}from"./index-_O3ivw8j.js";import{u as m}from"./index-DeWQXN47.js";const{project:a}=m();t.addRoute({path:"/reviews/list",name:"ReviewList",meta:{requiresAuth:!0},beforeEnter(e,i,r){e.meta.breadcrumb=a.list(),r()},component:()=>o(()=>import("./View-BF2CxAke.js"),__vite__mapDeps([0,1,2,3,4,5]))});

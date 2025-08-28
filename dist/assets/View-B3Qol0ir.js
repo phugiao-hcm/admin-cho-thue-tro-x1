@@ -1,0 +1,1 @@
+import{H as e}from"./HaSection-D4KIcMLj.js";import{d as t,o as n,c as a,a as r,w as s,b as l}from"./index-_O3ivw8j.js";const u=t({__name:"View",setup(i){return n(()=>{console.log("Profile 2 component mounted")}),(c,o)=>(r(),a(e,null,{default:s(()=>o[0]||(o[0]=[l("div",null,"Profile 2",-1)])),_:1,__:[0]}))}});export{u as default};
