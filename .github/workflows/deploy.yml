@@ -19,11 +19,11 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install
 
       - name: Build project & create 404.html
         run: |
-          npm run build
+          yarn build
           cp dist/index.html dist/404.html
 
       - name: Deploy to GitHub Pages
