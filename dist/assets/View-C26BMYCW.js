@@ -1,1 +1,0 @@
-import{H as o}from"./HaSection-CGQlzOVW.js";import{d as t,c as a,o as r,w as n,a as s}from"./index-AuwuFFdQ.js";const f=t({__name:"View",setup(i){return(l,e)=>(r(),a(o,null,{default:n(()=>[...e[0]||(e[0]=[s("div",null,"Profile 2",-1)])]),_:1}))}});export{f as default};
