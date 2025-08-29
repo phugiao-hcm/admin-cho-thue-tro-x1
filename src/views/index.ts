@@ -5,4 +5,3 @@ export const initRouter = async function () {
   await import('./services')
   await import('./users')
 }
-// await initRouter()

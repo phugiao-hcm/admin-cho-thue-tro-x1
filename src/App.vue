@@ -1,11 +1,9 @@
-<!-- <script setup>
+<script setup>
 import { computed } from 'vue'
 import DefaultLayout from './layouts/DefaultLayout.vue'
 import BlankLayout from './layouts/BlankLayout.vue'
 
 const token = '12312313'
-console.log('AP 11111111111111111111111')
-
 const layoutComponent = computed(() => {
   return token ? DefaultLayout : BlankLayout
 })
@@ -20,10 +18,10 @@ const layoutComponent = computed(() => {
 
 <style lang="scss">
 @use './assets/scss/main.scss';
-</style> -->
+</style>
 
 
-
+<!-- 
 <template>
   <div>
     <h1>Vue 3 SPA Demo</h1>
@@ -33,4 +31,4 @@ const layoutComponent = computed(() => {
     </nav>
     <router-view></router-view>
   </div>
-</template>
+</template> -->
