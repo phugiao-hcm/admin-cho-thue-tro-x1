@@ -22,11 +22,17 @@
 
 // export default router
 
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 
-const routes = [
+// const routes = [
+//   { path: '/', component: Home },
+//   { path: '/about', component: About },
+// ]
+
+const routes: RouteRecordRaw[] = [
+  // { path: '/', redirect: `/dashboard/list` }, // default route
   { path: '/', component: Home },
   { path: '/about', component: About },
 ]
