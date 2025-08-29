@@ -5,7 +5,7 @@ const { project } = useBreadcrumb()
 router.addRoute({
   path: `/projects/list`,
   name: 'ProjectList',
-  meta: { requiresAuth: true },
+  // meta: { requiresAuth: true },
   beforeEnter(to, from, next) {
     to.meta.breadcrumb = project.list()
     next()

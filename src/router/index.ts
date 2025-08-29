@@ -22,26 +22,59 @@
 
 // export default router
 
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
-import About from '../views/About.vue'
-import ProjectList from '../views/projects/list/View.vue'
+// import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+// import Home from '../views/Home.vue'
+// import About from '../views/About.vue'
 
 // const routes = [
 //   { path: '/', component: Home },
 //   { path: '/about', component: About },
 // ]
 
-const routes: RouteRecordRaw[] = [
-  // { path: '/', redirect: `/dashboard/list` }, // default route
+// const routes: RouteRecordRaw[] = [
+//   // { path: '/', redirect: `/dashboard/list` }, // default route
+//   { path: '/', component: Home },
+//   { path: '/about', component: About },
+//   { path: '/project/list', component: ProjectList },
+// ]
+
+// const router = createRouter({
+//   history: createWebHistory('/admin-cho-thue-tro-x1/'),
+//   routes,
+// })
+
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+
+// Base routes
+const baseRoutes: RouteRecordRaw[] = [
   { path: '/', component: Home },
   { path: '/about', component: About },
-  { path: '/project/list', component: ProjectList },
 ]
 
 const router = createRouter({
   history: createWebHistory('/admin-cho-thue-tro-x1/'),
-  routes,
+  routes: baseRoutes,
 })
+
+// export const initRouter = async function () {
+// await import('./dashboard')
+// await import('./projects')
+// await import('./reviews')
+// await import('./services')
+// await import('./users')
+// }
+// await initRouter()
+
+// Hàm initRouter: import các module route và add vào router
+// export async function initRouter() {
+//   await import('@/views/dashboard')
+//   await import('@/views/projects')
+//   // có thể thêm reviews, services, users...
+
+//   // dashboardRoutes.forEach((r) => router.addRoute(r))
+//   // projectRoutes.forEach((r) => router.addRoute(r))
+// }
 
 export default router
