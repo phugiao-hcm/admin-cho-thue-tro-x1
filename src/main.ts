@@ -28,6 +28,7 @@ import '@/views/index'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { useUI } from '@/mixins/globalMixin'
+import '@/views/index'
 
 const app = createApp(App)
 app.use(router)
