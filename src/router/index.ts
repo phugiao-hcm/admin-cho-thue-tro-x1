@@ -25,6 +25,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
+import ProjectList from '../views/projects/list/View.vue'
 
 // const routes = [
 //   { path: '/', component: Home },
@@ -35,6 +36,7 @@ const routes: RouteRecordRaw[] = [
   // { path: '/', redirect: `/dashboard/list` }, // default route
   { path: '/', component: Home },
   { path: '/about', component: About },
+  { path: '/project/list', component: ProjectList },
 ]
 
 const router = createRouter({
