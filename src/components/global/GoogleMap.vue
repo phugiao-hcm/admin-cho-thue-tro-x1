@@ -4,87 +4,64 @@
         <input
             ref="autocompleteInput"
             type="text"
-            placeholder="Nhập vị trí..."
+            placeholder="Nhập địa chỉ..."
             class="autocomplete-input"
         />
+
+        <!-- Input lat/lng -->
+        <div class="latlng-inputs">
+            <input v-model.number="lat" type="number" step="0.000001" placeholder="Lat" />
+            <input v-model.number="lng" type="number" step="0.000001" placeholder="Lng" />
+            <el-button type="primary" @click="goToLatLng">Tìm</el-button>
+        </div>
 
         <!-- Map -->
         <div ref="mapRef" class="map"></div>
     </div>
 </template>
 
-<!-- <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useGoogleMaps } from '@/composables/useGoogleMaps.ts'
-
-const apiKey = 'AIzaSyD2_kkzvfEJmLHoOV4ok9LfdoaNxTFcGac' // 🔑 thay bằng key thật
-
-const mapRef = ref<HTMLDivElement | null>(null)
-const autocompleteInput = ref<HTMLInputElement | null>(null)
-
-const { loadScript } = useGoogleMaps(apiKey)
-
-onMounted(async () => {
-    await loadScript()
-
-    if (!mapRef.value || !autocompleteInput.value) return
-
-    // Khởi tạo Map
-    const map = new google.maps.Map(mapRef.value, {
-        center: { lat: 10.762622, lng: 106.660172 }, // Hồ Chí Minh
-        zoom: 13,
-    })
-
-    // Khởi tạo Autocomplete
-    const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.value, {
-        fields: ['geometry', 'formatted_address'],
-    })
-
-    autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace()
-        if (!place.geometry || !place.geometry.location) return
-
-        map.setCenter(place.geometry.location)
-        new google.maps.Marker({
-            position: place.geometry.location,
-            map,
-        })
-    })
-})
-</script> -->
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useGoogleMaps } from '@/composables/useGoogleMaps.ts'
+import { useGoogleMaps } from '@/composables/useGoogleMaps'
 
 const apiKey = 'AIzaSyD2_kkzvfEJmLHoOV4ok9LfdoaNxTFcGac' // 🔑 thay bằng key thật
 
 const mapRef = ref<HTMLDivElement | null>(null)
 const autocompleteInput = ref<HTMLInputElement | null>(null)
+
+const lat = ref(11.233129) // mặc định
+const lng = ref(106.732281)
 
 const { loadScript } = useGoogleMaps(apiKey)
 
 // Emit event lên component cha
 const emit = defineEmits<{ (e: 'update:location', location: { lat: number; lng: number }): void }>()
 
+let map: google.maps.Map
+let marker: google.maps.Marker
+
 onMounted(async () => {
     await loadScript()
-
     if (!mapRef.value || !autocompleteInput.value) return
 
-    const map = new google.maps.Map(mapRef.value, {
-        center: { lat: 10.762622, lng: 106.660172 },
+    // Init map
+    map = new google.maps.Map(mapRef.value, {
+        center: { lat: lat.value, lng: lng.value },
         zoom: 13,
     })
 
+    marker = new google.maps.Marker({
+        position: { lat: lat.value, lng: lng.value },
+        map,
+    })
+
+    // --- Autocomplete ---
     const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.value, {
         fields: ['geometry', 'formatted_address'],
     })
 
     autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace()
-
-        console.log('1231231 :', place.address_components)
         if (!place.geometry || !place.geometry.location) return
 
         const location = {
@@ -92,18 +69,34 @@ onMounted(async () => {
             lng: place.geometry.location.lng(),
         }
 
-        map.setCenter(place.geometry.location)
-        new google.maps.Marker({
-            position: place.geometry.location,
-            map,
-        })
+        map.setCenter(location)
+        marker.setPosition(location)
+        lat.value = location.lat
+        lng.value = location.lng
 
-        // Emit lên component cha
+        emit('update:location', location)
+    })
+
+    // --- Click trên map ---
+    map.addListener('click', (e: google.maps.MapMouseEvent) => {
+        if (!e.latLng) return
+        const location = { lat: e.latLng.lat(), lng: e.latLng.lng() }
+        marker.setPosition(location)
+        lat.value = location.lat
+        lng.value = location.lng
         emit('update:location', location)
     })
 })
-</script>
 
+// --- Hàm khi nhập lat/lng thủ công ---
+const goToLatLng = () => {
+    if (!map || !marker) return
+    const location = { lat: lat.value, lng: lng.value }
+    map.setCenter(location)
+    marker.setPosition(location)
+    emit('update:location', location)
+}
+</script>
 
 <style scoped>
 .map-container {
@@ -114,6 +107,16 @@ onMounted(async () => {
 .autocomplete-input {
     padding: 8px;
     font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+.latlng-inputs {
+    display: flex;
+    gap: 6px;
+}
+.latlng-inputs input {
+    flex: 1;
+    padding: 6px;
     border: 1px solid #ddd;
     border-radius: 6px;
 }
