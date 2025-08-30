@@ -54,7 +54,7 @@
                         <div class="mt-12px flex-gap">
                             <div class="w-100">
                                 <p class="body-small-regular neutral-700">
-                                    Số lượng phòng
+                                    Tổng số lượng phòng
                                     <span class="secondary-red-600">*</span>
                                 </p>
                                 <el-form-item prop="numberOfRooms">
@@ -62,7 +62,7 @@
                                         :algin="'left'"
                                         :min="1"
                                         :max="100"
-                                        :placeholder="'Nhập số lượng phòng'"
+                                        :placeholder="'Nhập Tổng số lượng phòng'"
                                         :valueNumber="form.numberOfRooms"
                                         @onChange="onChangeNumOfRoomHotel"
                                     />
@@ -97,7 +97,7 @@
                                 </p>
                                 <el-form-item prop="fullName">
                                     <el-input
-                                        :placeholder="'Nhập số lượng phòng'"
+                                        :placeholder="'Nhập Họ và tên người đại diện'"
                                         v-model="form.fullName"
                                     ></el-input>
                                 </el-form-item>
@@ -112,6 +112,28 @@
                                         :placeholder="'Nhập số số điện thoại liên hệ'"
                                         v-model="form.mobileLandlord"
                                     ></el-input>
+                                </el-form-item>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-card">
+                        <div class="mt-12px flex-gap">
+                            <div class="w-100">
+                                <p class="body-small-regular neutral-700">
+                                    Số phòng còn lại
+                                    <span class="secondary-red-600">*</span>
+                                </p>
+                                <el-form-item prop="fullName">
+                                    <InputNumber
+                                        :algin="'left'"
+                                        :suffix="` m²`"
+                                        :min="0"
+                                        :max="9999"
+                                        :placeholder="'Nhập số phòng còn trống'"
+                                        :valueNumber="form.numORoomAvailable"
+                                        @onChange="onChangeNumORoomAvailable"
+                                    />
                                 </el-form-item>
                             </div>
                             <div class="w-100">
@@ -438,6 +460,7 @@ interface ProjectForm {
     status: number | null
     featured: number | null
     mobileLandlord: number | null
+    numORoomAvailable: number | null
 }
 
 const form = reactive<ProjectForm>({
@@ -457,6 +480,7 @@ const form = reactive<ProjectForm>({
     status: PROJECT_STATUS.APPROVED,
     featured: FEATURED_STATUS.NORMAL,
     mobileLandlord: null,
+    numORoomAvailable: null,
 })
 
 const rules: FormRules = {
@@ -510,6 +534,10 @@ const onChangeSquare = (value: number) => {
 }
 const onChangePrice = (value: number) => {
     form.price = value
+}
+
+const onChangeNumORoomAvailable = (value: number) => {
+    form.numORoomAvailable = value
 }
 
 const onBack = () => {
