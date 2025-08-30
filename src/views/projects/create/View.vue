@@ -70,7 +70,7 @@
                             </div>
                             <div class="w-100">
                                 <p class="body-small-regular neutral-700">
-                                    Diện tích phòng
+                                    Diện tích phòng (/m²)
                                     <span class="secondary-red-600">*</span>
                                 </p>
                                 <el-form-item prop="area">
@@ -104,7 +104,19 @@
                             </div>
                             <div class="w-100">
                                 <p class="body-small-regular neutral-700">
-                                    Giá thuê phòng
+                                    Số điện thoại liên hệ
+                                    <span class="secondary-red-600">*</span>
+                                </p>
+                                <el-form-item prop="fullName">
+                                    <el-input
+                                        :placeholder="'Nhập số số điện thoại liên hệ'"
+                                        v-model="form.mobileLandlord"
+                                    ></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="w-100">
+                                <p class="body-small-regular neutral-700">
+                                    Giá thuê phòng (/1 tháng)
                                     <span class="secondary-red-600">*</span>
                                 </p>
                                 <el-form-item prop="price">
@@ -113,7 +125,7 @@
                                         :algin="'left'"
                                         placeholder="Nhập giá thuê phòng"
                                         v-model="form.price"
-                                        @onChange="onChangePrice"
+                                        @input="onChangePrice"
                                     />
                                 </el-form-item>
                             </div>
@@ -222,6 +234,20 @@
                 <div class="flex-right mobile-mt-sm">
                     <div class="custom-card">
                         <div>
+                            <p class="body-small-regular neutral-700">Loại tin đăng</p>
+                            <div>
+                                <el-radio-group v-model="form.featured">
+                                    <el-radio :value="FEATURED_STATUS.NORMAL">Tin thường</el-radio>
+                                    <el-radio :value="FEATURED_STATUS.FEATURED"
+                                        >Tin nổi bật</el-radio
+                                    >
+                                </el-radio-group>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-card">
+                        <div>
                             <p class="body-small-regular neutral-700">Thêm tiện ích</p>
                             <div>
                                 <el-select
@@ -311,8 +337,8 @@
                                     <CropperFixed
                                         ref="cropperFixedRef"
                                         @onResult="resultThumbnail"
-                                        :width="1370"
-                                        :height="930"
+                                        :width="1360"
+                                        :height="1180"
                                         :typeUpload="'avatar-upload-custom'"
                                     >
                                         <div class="image-box add-image">
@@ -359,6 +385,7 @@ import {
     DIRECTION_ROOM_OPTIONS,
     FACILITY_ROOM_OPTIONS,
     PROJECT_STATUS,
+    FEATURED_STATUS,
 } from '../const'
 import { addPost } from './api'
 import { useUI } from '@/mixins/globalMixin'
@@ -400,15 +427,17 @@ interface ProjectForm {
     area: number | null
     fullName: string | null
     roomType: string | null
-    viewRoom: string | null
+    viewRoom: number | null
     description: string | null
-    facilities: string[]
+    facilities: number[]
     price: number | null
     address: string | null
     imageList: any[]
     latitude: number | null
     longitude: number | null
     status: number | null
+    featured: number | null
+    mobileLandlord: number | null
 }
 
 const form = reactive<ProjectForm>({
@@ -426,6 +455,8 @@ const form = reactive<ProjectForm>({
     latitude: null,
     longitude: null,
     status: PROJECT_STATUS.APPROVED,
+    featured: FEATURED_STATUS.NORMAL,
+    mobileLandlord: null,
 })
 
 const rules: FormRules = {
@@ -472,13 +503,13 @@ const onRefreshImage = () => {
 }
 
 const onChangeNumOfRoomHotel = (value: number) => {
-    form.numberOfRooms = Number(value)
+    form.numberOfRooms = value
 }
 const onChangeSquare = (value: number) => {
-    form.area = Number(value)
+    form.area = value
 }
 const onChangePrice = (value: number) => {
-    form.price = Number(value)
+    form.price = value
 }
 
 const onBack = () => {

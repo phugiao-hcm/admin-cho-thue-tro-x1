@@ -9,9 +9,9 @@ export const TYPE_ROOM = {
   RegularRoom: 1, // Phòng trọ thường: diện tích nhỏ (10–20m²), có thể chung hoặc riêng nhà vệ sinh.
   EnSuiteRoom: 2, // Phòng trọ khép kín: có nhà vệ sinh, bếp trong phòng, phù hợp gia đình nhỏ hoặc cặp đôi.
   RoomWithAttic: 3, // Phòng trọ có gác: tận dụng không gian, giá vừa phải, sinh viên hay thuê.
-  DormitoryRoom: 3, // Phòng ký túc xá (dorm): giường tầng, ở ghép, giá rẻ nhất, thường cho sinh viên hoặc công nhân.
-  MiniApartment: 3, // Chung cư mini: dạng căn hộ nhỏ, đầy đủ tiện nghi, có thể 1PN hoặc 2PN.
-  HouseForRent: 3, // Nhà nguyên căn cho thuê: phù hợp nhóm bạn, hộ gia đình, hoặc người thuê lâu dài.
+  DormitoryRoom: 4, // Phòng ký túc xá (dorm): giường tầng, ở ghép, giá rẻ nhất, thường cho sinh viên hoặc công nhân.
+  MiniApartment: 5, // Chung cư mini: dạng căn hộ nhỏ, đầy đủ tiện nghi, có thể 1PN hoặc 2PN.
+  HouseForRent: 6, // Nhà nguyên căn cho thuê: phù hợp nhóm bạn, hộ gia đình, hoặc người thuê lâu dài.
 } as const
 
 export const TYPE_ROOM_OPTIONS = [
@@ -88,3 +88,9 @@ export const FACILITY_ROOM_OPTIONS = [
   { label: 'Gần sân bay', value: FACILITY_ROOM.NearAirport },
   { label: 'Gần ga tàu', value: FACILITY_ROOM.NearTrainStation },
 ]
+
+// Trạng thái dùng chung
+export const FEATURED_STATUS = {
+  NORMAL: 0, // Tin thường
+  FEATURED: 1, // Tin nổi bât
+} as const
