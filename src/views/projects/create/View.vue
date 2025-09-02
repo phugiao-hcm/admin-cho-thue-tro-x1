@@ -359,7 +359,7 @@
                                     <CropperFixed
                                         ref="cropperFixedRef"
                                         @onResult="resultThumbnail"
-                                        :width="1360"
+                                        :width="1520"
                                         :height="1180"
                                         :typeUpload="'avatar-upload-custom'"
                                     >
