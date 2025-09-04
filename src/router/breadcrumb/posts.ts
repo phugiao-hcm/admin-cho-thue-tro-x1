@@ -1,4 +1,4 @@
-// useProjectBreadcrumb.ts
+// usePostBreadcrumb.ts
 export interface BreadcrumbLevel {
   hard_code: boolean
   name: string
@@ -12,7 +12,7 @@ export interface BreadcrumbItem {
   title?: BreadcrumbLevel
 }
 
-export const useProjectBreadcrumb = () => {
+export const usePostBreadcrumb = () => {
   const list = (): BreadcrumbItem => {
     return {
       level_1: {

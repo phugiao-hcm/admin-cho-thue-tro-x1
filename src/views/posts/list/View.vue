@@ -170,7 +170,7 @@ import { reactive, ref, onMounted } from 'vue'
 import type { FormItemProps, FormProps } from 'element-plus'
 import { useRouter } from 'vue-router'
 import Pagination from '@/components/global/PaginationMobile.vue'
-import { getProjectList } from './api'
+import { getPostList } from './api'
 import { PROJECT_STATUS } from '../const'
 import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
 import { usePage } from '../mixin'
@@ -209,10 +209,10 @@ const handleCurrentChange = (value: any) => {
   getRoomTypeList()
 }
 
-const fetchProjects = async () => {
+const fetchPosts = async () => {
   try {
     ui.isLoading = true
-    tableData.value = await getProjectList()
+    tableData.value = await getPostList()
     console.log('tableData :', tableData)
   } catch (e) {
     console.error(e)
@@ -222,7 +222,7 @@ const fetchProjects = async () => {
 }
 
 onMounted(() => {
-  fetchProjects()
+  fetchPosts()
 })
 
 const onDirectProjectCreate = () => {

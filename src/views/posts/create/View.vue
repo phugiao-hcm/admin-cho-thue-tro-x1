@@ -569,7 +569,7 @@ const onSubmit = async () => {
                 type: 'success',
             })
 
-            router.push({ name: 'ProjectList' })
+            router.push({ name: 'PostList' })
         }
     } catch (error) {
         alert('Có lỗi xảy ra: ' + error)

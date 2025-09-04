@@ -16,7 +16,7 @@ const db = getFirestore(app) // get Firestore instance from FirebaseApp
 // Lấy chi tiết 1 project theo id
 export const getProjectById = async (id: string): Promise<Project | null> => {
   try {
-    const docRef = doc(db, 'projects', id)
+    const docRef = doc(db, 'posts', id)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {

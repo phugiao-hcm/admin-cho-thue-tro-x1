@@ -12,7 +12,7 @@ export interface Posts {
 
 const db = getFirestore(app) // get Firestore instance from FirebaseApp
 
-export async function getProjectList(): Promise<Posts[]> {
+export async function getPostList(): Promise<Posts[]> {
   const querySnapshot = await getDocs(collection(db, 'posts'))
 
   return querySnapshot.docs.map((doc) => ({
