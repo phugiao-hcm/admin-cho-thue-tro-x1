@@ -1,19 +1,22 @@
 <template>
   <div class="left-section-sidebar">
-    <div class="flex-center custom-logo" :class="isCollapse ? 'justify-center' : 'justify-between'">
+    <div
+      class="flex-center custom-logo"
+      :class="!isCollapse ? 'justify-center' : 'justify-between'"
+    >
       <img
-        :class="!isCollapse ? '' : 'display-none'"
+        :class="isCollapse ? '' : 'display-none'"
         class="logo-big"
         src="../../assets/images/svg/g2j-logo.svg"
         width="86px"
       />
-      <el-button :icon="isCollapse ? DArrowRight : DArrowLeft" @click="changeCollapse" />
+      <el-button :icon="!isCollapse ? DArrowRight : DArrowLeft" @click="changeCollapse" />
     </div>
 
     <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
-      :collapse="isCollapse"
+      :collapse="!isCollapse"
       @open="handleOpen"
       @close="handleClose"
     >
@@ -99,8 +102,7 @@ const ui = reactive({
 
 // hàm emit sự kiện
 const changeCollapse = () => {
-  isCollapse.value = !isCollapse.value
-
+  // isCollapse.value = !isCollapse.value
   emit('collapsed')
 }
 

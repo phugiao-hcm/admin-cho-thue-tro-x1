@@ -3,7 +3,7 @@
     <el-container>
       <!-- Sidebar -->
       <el-aside id="sidebar-section" class="left-section" :class="menuClass" style="z-index: 99">
-        <LeftSidebar :isCollapse="isCollapse" @collapsed="getCollapsed" />
+        <LeftSidebar :isCollapse="isCollapse" @collapsed="changeCollapse" />
       </el-aside>
 
       <el-container>
@@ -15,7 +15,7 @@
             ui.isResponsiveMobile && !isCollapse ? 'overlay-header-bg is-disabled' : '',
           ]"
         >
-          <HeaderBar :isCollapse="isCollapse" />
+          <HeaderBar :isCollapse="isCollapse" @collapsed="changeCollapse" />
         </el-header>
         <el-divider style="margin: 12px 0" />
 
@@ -66,14 +66,14 @@ const iosPaddingStyle = computed(() =>
 /**
  * Methods
  */
-function getCollapsed() {
+// hàm emit sự kiện
+const changeCollapse = () => {
   isCollapse.value = !isCollapse.value
   const menuBtn = document.getElementById('menu-button')
   if (menuBtn) {
     menuBtn.style.width = !isCollapse.value ? '240px' : '64px'
   }
 }
-
 /**
  * Lifecycle
  */
@@ -101,6 +101,7 @@ onBeforeUnmount(() => {
   .left-section {
     border-right: 1px solid var(--neutral-300);
     z-index: 99;
+    background: white;
     position: fixed;
     text-align: left;
     width: auto !important;
