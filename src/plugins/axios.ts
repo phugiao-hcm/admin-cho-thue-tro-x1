@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 const api: AxiosInstance = axios.create({
-  baseURL: 'https://api.example.com', // đổi thành API backend của bạn
+  baseURL: 'https://api.kongricsstudio.com', // đổi thành API backend của bạn
   timeout: 10000,
 })
 
