@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import type { App } from 'vue'
 import { ref, nextTick } from 'vue'
 import type { FormInstance } from 'element-plus'
@@ -10,6 +10,10 @@ const ui = reactive({
   isFixedLeft: null as null | boolean,
   isResponsiveMobile: false,
   windowWidth: window.innerWidth,
+})
+
+const isMobile = computed(() => {
+  return ui.windowWidth <= 992
 })
 
 const formatPrice = (value?: number | null): string => {
@@ -59,5 +63,5 @@ export function createGlobalPlugin() {
 
 // ✅ Composable để dùng trong <script setup>
 export function useUI() {
-  return { ui, formatPrice, generateRandomSuffix, onResetValidateField, validateRequired }
+  return { ui, formatPrice, generateRandomSuffix, onResetValidateField, validateRequired, isMobile }
 }
