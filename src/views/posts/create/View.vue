@@ -437,7 +437,7 @@ import {
 import { addPost } from './api'
 import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
-import { uploadImage } from '@/apis/upload.ts'
+import { getTokenImage, uploadImage } from '@/apis/upload.ts'
 import { toSlug } from '@/utils/string'
 import { createPhongTro } from './api'
 import { getProvinces, getWards } from '@/apis/province'
@@ -465,6 +465,7 @@ const cropperFixedRef = ref<InstanceType<typeof CropperFixed> | null>(null)
 
 const provinces = ref<any>([])
 const wards = ref<any>([])
+const tokenImage = ref<any>({})
 
 const ui = reactive({
   isSubmitting: false,
@@ -541,8 +542,6 @@ const getProvinceList = async () => {
   try {
     ui.isLoadingProvinces = true
     provinces.value = await getProvinces()
-
-    console.log('provinces.value :', provinces.value)
   } catch (e) {
     console.error(e)
   } finally {
@@ -553,8 +552,6 @@ const getWardList = async (provinceSn: number) => {
   try {
     ui.isLoadingWards = true
     wards.value = await getWards(provinceSn)
-
-    console.log('wards.value :', wards.value)
   } catch (e) {
     console.error(e)
   } finally {
@@ -566,8 +563,27 @@ const onChangeProvinceList = (provinceSn: number) => {
   getWardList(provinceSn)
 }
 
+const getTokenImage = async () => {
+  try {
+    tokenImage.value = await getTokenImage()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const uploadFileImg = async (image: File) => {
+  try {
+    const imageUpdated = await uploadImage(image)
+    return imageUpdated
+  } catch (e) {
+    console.error(e)
+  }
+  return null
+}
+
 onMounted(() => {
   getProvinceList()
+  getTokenImage()
 })
 
 const setAsMain = (image?: any) => {
@@ -696,7 +712,7 @@ const uploadAll = async () => {
   const onlyFiles = form.photos.map((item) => item.file)
   console.log('onlyFiles00 :', onlyFiles)
 
-  const uploadedPaths = await Promise.all(onlyFiles.map((file) => onUpload(file)))
+  const uploadedPaths = await Promise.all(onlyFiles.map((file) => uploadFileImg(file)))
 
   // gán lại vào form.photos
   form.photos = form.photos.map((item, index) => ({
@@ -705,18 +721,18 @@ const uploadAll = async () => {
   }))
 }
 
-const onUpload = async (image: File) => {
-  if (image) {
-    try {
-      const imageUpdated = await uploadImage(image) // API trả về link
-      return imageUpdated
-    } catch (err) {
-      console.error('Upload failed:', err)
-      return null
-    }
-  }
-  return null
-}
+// const onUpload = async (image: File) => {
+//   if (image) {
+//     try {
+//       const imageUpdated = await uploadImage(image) // API trả về link
+//       return imageUpdated
+//     } catch (err) {
+//       console.error('Upload failed:', err)
+//       return null
+//     }
+//   }
+//   return null
+// }
 
 const handleLocation = (location: { lat: number; lng: number }) => {
   form.latitude = location.lat
