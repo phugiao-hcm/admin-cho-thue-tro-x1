@@ -49,7 +49,7 @@ import api from '@/apis/axios' // đường dẫn file api.ts của bạn
 // GET
 const getPhongTroDetail = async (id: number) => {
   try {
-    const response = await api.get(`/api/v1/phongtro/getPhongTroDetail?id=${id}`)
+    const response = await api.get(`/v1/phongtro/getPhongTroDetail?id=${id}`)
     console.log('Users:', response.data)
   } catch (error) {
     console.error('Fetch users failed:', error)

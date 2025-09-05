@@ -1,18 +1,3 @@
-// import api from './apiCaller'
-
-// export async function uploadImage(file: File): Promise<string> {
-//   const formData = new FormData()
-//   formData.append('image', file)
-
-//   const res = await api.post('/upload', formData, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//     },
-//   })
-
-//   return res.data.url // secure_url từ server
-// }
-
 import axios from 'axios'
 
 const CLOUD_NAME = 'ds8q7doz2' // Lấy trong Dashboard

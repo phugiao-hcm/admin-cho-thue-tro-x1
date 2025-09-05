@@ -39,11 +39,8 @@
               </p>
             </div>
             <div>
-              <el-form-item prop="nameAccommodation">
-                <el-input
-                  :placeholder="'Nhập tên cơ sở lưu trú'"
-                  v-model="form.nameAccommodation"
-                ></el-input>
+              <el-form-item prop="title">
+                <el-input :placeholder="'Nhập tên cơ sở lưu trú'" v-model="form.title"></el-input>
               </el-form-item>
             </div>
           </div>
@@ -55,13 +52,13 @@
                   Tổng số lượng phòng
                   <span class="secondary-red-600">*</span>
                 </p>
-                <el-form-item prop="numberOfRooms">
+                <el-form-item prop="totalRoom">
                   <InputNumber
                     :algin="'left'"
                     :min="1"
                     :max="100"
                     :placeholder="'Nhập Tổng số lượng phòng'"
-                    :valueNumber="form.numberOfRooms"
+                    :valueNumber="form.totalRoom"
                     @onChange="onChangeNumOfRoomHotel"
                   />
                 </el-form-item>
@@ -71,14 +68,14 @@
                   Diện tích phòng (/m²)
                   <span class="secondary-red-600">*</span>
                 </p>
-                <el-form-item prop="area">
+                <el-form-item prop="square">
                   <InputNumber
                     :algin="'left'"
                     :suffix="` m²`"
                     :min="0"
                     :max="9999"
                     :placeholder="'Nhập diện tích phòng'"
-                    :valueNumber="form.area"
+                    :valueNumber="form.square"
                     @onChange="onChangeSquare"
                   />
                 </el-form-item>
@@ -93,10 +90,10 @@
                   Họ và tên người đại diện
                   <span class="secondary-red-600">*</span>
                 </p>
-                <el-form-item prop="fullName">
+                <el-form-item prop="ownerName">
                   <el-input
                     :placeholder="'Nhập Họ và tên người đại diện'"
-                    v-model="form.fullName"
+                    v-model="form.ownerName"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -105,10 +102,10 @@
                   Số điện thoại liên hệ
                   <span class="secondary-red-600">*</span>
                 </p>
-                <el-form-item prop="fullName">
+                <el-form-item prop="ownerName">
                   <el-input
                     :placeholder="'Nhập số số điện thoại liên hệ'"
-                    v-model="form.mobileLandlord"
+                    v-model="form.ownerPhone"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -122,14 +119,14 @@
                   Số phòng còn lại
                   <span class="secondary-red-600">*</span>
                 </p>
-                <el-form-item prop="fullName">
+                <el-form-item prop="ownerName">
                   <InputNumber
                     :algin="'left'"
                     :suffix="` m²`"
                     :min="0"
                     :max="9999"
                     :placeholder="'Nhập số phòng còn trống'"
-                    :valueNumber="form.numORoomAvailable"
+                    :valueNumber="form.currentRoom"
                     @onChange="onChangeNumORoomAvailable"
                   />
                 </el-form-item>
@@ -189,7 +186,7 @@
                 <el-select
                   :loading="ui.isLoadingRoomView"
                   class="w-100"
-                  v-model="form.viewRoom"
+                  v-model="form.roomDirection"
                   :placeholder="'Chọn hướng phòng'"
                   :loading-text="'message.loading'"
                   :no-data-text="'no_data'"
@@ -214,8 +211,8 @@
               </p>
             </div>
             <div>
-              <el-form-item prop="address">
-                <el-input :placeholder="'Nhập địa chỉ'" v-model="form.address"></el-input>
+              <el-form-item prop="houseNo">
+                <el-input :placeholder="'Nhập địa chỉ'" v-model="form.houseNo"></el-input>
               </el-form-item>
             </div>
           </div>
@@ -227,9 +224,9 @@
             <div>
               <el-form-item>
                 <el-input
-                  type="textarea"
+                  type="textsquare"
                   :placeholder="'Nhập mô tả ngắn gọn'"
-                  v-model="form.description"
+                  v-model="form.content"
                   rows="5"
                   maxlength="3000"
                   show-word-limit
@@ -253,7 +250,7 @@
             <div>
               <p class="body-small-regular neutral-700">Loại tin đăng</p>
               <div>
-                <el-radio-group v-model="form.featured">
+                <el-radio-group v-model="form.adType">
                   <el-radio :value="FEATURED_STATUS.NORMAL">Tin thường</el-radio>
                   <el-radio :value="FEATURED_STATUS.FEATURED">Tin nổi bật</el-radio>
                 </el-radio-group>
@@ -269,7 +266,7 @@
                   :loading="ui.isLoadingRoomBed"
                   class="w-100"
                   multiple
-                  v-model="form.facilities"
+                  v-model="form.facility"
                   :placeholder="'Chọn tiên ích'"
                   :loading-text="'Đang tải...'"
                   :no-data-text="'Khong có dữ liệu'"
@@ -299,11 +296,11 @@
           </div>
 
           <div class="custom-card">
-            <el-form-item prop="imageList">
+            <el-form-item prop="photos">
               <div class="image-gallery">
                 <div
                   class="image-box"
-                  v-for="(image, index) in form.imageList"
+                  v-for="(image, index) in form.photos"
                   :key="image.id"
                   :class="{ active: image.firstDisplay }"
                 >
@@ -364,8 +361,55 @@
               </p>
             </div>
           </div>
+
           <div class="custom-card">
             <GoogleMapWithAutocomplete @update:location="handleLocation" />
+          </div>
+
+          <div class="custom-card">
+            <div class="mt-12px flex-gap">
+              <div class="w-100">
+                <el-form-item>
+                  <el-select
+                    :loading="ui.isLoadingProvinces"
+                    class="w-100"
+                    v-model="form.provinceId"
+                    :placeholder="'Chọn tỉnh/thành phố'"
+                    :loading-text="'Đang tải...'"
+                    :no-data-text="'Khong có dữ liệu'"
+                    @change="onChangeProvinceList"
+                  >
+                    <el-option
+                      v-for="(item, index) in provinces"
+                      :key="index"
+                      :label="item.name"
+                      :value="item.code"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+              <div class="w-100">
+                <el-form-item>
+                  <el-select
+                    :loading="ui.isLoadingRoomBed"
+                    class="w-100"
+                    v-model="form.wardId"
+                    :placeholder="'Chọn xã/phường'"
+                    :loading-text="'Đang tải...'"
+                    :no-data-text="'Khong có dữ liệu'"
+                  >
+                    <el-option
+                      v-for="(item, index) in wards"
+                      :key="index"
+                      :label="item.name"
+                      :value="item.code"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -373,7 +417,7 @@
   </ha-offset-section>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
@@ -395,6 +439,8 @@ import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
 import { uploadImage } from '@/apis/upload.ts'
 import { toSlug } from '@/utils/string'
+import { createPhongTro } from './api'
+import { getProvinces, getWards } from '@/apis/province'
 
 const router = useRouter()
 const route = useRoute()
@@ -417,72 +463,118 @@ const { generateRandomSuffix, onResetValidateField } = useUI()
 const formRef = ref<FormInstance>()
 const cropperFixedRef = ref<InstanceType<typeof CropperFixed> | null>(null)
 
+const provinces = ref<any>([])
+const wards = ref<any>([])
+
 const ui = reactive({
   isSubmitting: false,
   isLoadingRoomView: false,
   isLoadingRoomBed: false,
   isLoadingFacility: false,
   isLoadingCancellationPolicySetupInfo: false,
+  isLoadingProvinces: false,
+  isLoadingWards: false,
 })
 
 interface ProjectForm {
-  nameAccommodation: string | null
-  numberOfRooms: number | null
-  area: number | null
-  fullName: string | null
+  title: string | null
+  totalRoom: number | null
+  square: number | null
+  ownerName: string | null
   roomType: string | null
-  viewRoom: number | null
-  description: string | null
-  facilities: number[]
+  roomDirection: number | null
+  content: string | null
+  facility: number[]
   price: number | null
-  address: string | null
-  imageList: any[]
+  houseNo: string | null // Thiếu
+  photos: any[]
   latitude: number | null
   longitude: number | null
+  deposit: number | null
   status: number | null
-  featured: number | null
-  mobileLandlord: number | null
-  numORoomAvailable: number | null
+  adType: number | null
+  ownerPhone: number | null
+  currentRoom: number | null
   slug: string | null
+  provinceId: string | null
+  districtId: string | null
+  wardId: string | null
 }
 
 const form = reactive<ProjectForm>({
-  nameAccommodation: null,
-  numberOfRooms: null,
-  area: null,
-  fullName: null,
+  title: null,
+  totalRoom: null,
+  square: null,
+  ownerName: null,
   roomType: null,
-  viewRoom: null,
-  description: null,
-  facilities: [],
+  roomDirection: null,
+  content: null,
+  facility: [],
   price: null,
-  address: null,
-  imageList: [],
+  houseNo: null,
+  photos: [],
   latitude: null,
   longitude: null,
   status: PROJECT_STATUS.APPROVED,
-  featured: FEATURED_STATUS.NORMAL,
-  mobileLandlord: null,
-  numORoomAvailable: null,
+  adType: FEATURED_STATUS.NORMAL,
+  ownerPhone: null,
+  currentRoom: null,
   slug: null,
+  deposit: null,
+  provinceId: null,
+  districtId: '1',
+  wardId: null,
 })
 
 const rules: FormRules = {
-  // nameAccommodation: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-  // numberOfRooms: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
-  // area: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
-  // fullName: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+  // title: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+  // totalRoom: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
+  // square: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
+  // ownerName: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
   // price: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
   // roomType: [{ validator: validateRequiredCallback, trigger: ['change'] }],
-  // address: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-  // imageList: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
+  // houseNo: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
+  // photos: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
 }
 
+const getProvinceList = async () => {
+  try {
+    ui.isLoadingProvinces = true
+    provinces.value = await getProvinces()
+
+    console.log('provinces.value :', provinces.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    ui.isLoadingProvinces = false
+  }
+}
+const getWardList = async (provinceSn: number) => {
+  try {
+    ui.isLoadingWards = true
+    wards.value = await getWards(provinceSn)
+
+    console.log('wards.value :', wards.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    ui.isLoadingWards = false
+  }
+}
+
+const onChangeProvinceList = (provinceSn: number) => {
+  getWardList(provinceSn)
+}
+
+onMounted(() => {
+  getProvinceList()
+})
+
 const setAsMain = (image?: any) => {
-  form.imageList.forEach((img: any) => (img.firstDisplay = 0))
+  form.photos.forEach((img: any) => (img.firstDisplay = 0))
   if (image) image.firstDisplay = 1
-  if (!form.imageList.some((img: any) => img.firstDisplay === 1) && form.imageList.length > 0) {
-    form.imageList[0].firstDisplay = 1
+  if (!form.photos.some((img: any) => img.firstDisplay === 1) && form.photos.length > 0) {
+    form.photos[0].firstDisplay = 1
   }
 }
 
@@ -493,15 +585,15 @@ const resultThumbnail = (result: File) => {
     fileName: `${generateRandomSuffix()}-${result.name}`,
     firstDisplay: 0,
   }
-  if (form.imageList.length < 11) {
-    form.imageList.push(newImage)
-    onResetValidateField('imageList')
+  if (form.photos.length < 11) {
+    form.photos.push(newImage)
+    onResetValidateField('photos')
   }
   onRefreshImage()
 }
 
 const deleteImage = (image: any) => {
-  form.imageList = form.imageList.filter((img: any) => img.fileName !== image.fileName)
+  form.photos = form.photos.filter((img: any) => img.fileName !== image.fileName)
   onRefreshImage()
 }
 
@@ -511,17 +603,17 @@ const onRefreshImage = () => {
 }
 
 const onChangeNumOfRoomHotel = (value: number) => {
-  form.numberOfRooms = value
+  form.totalRoom = value
 }
 const onChangeSquare = (value: number) => {
-  form.area = value
+  form.square = value
 }
 const onChangePrice = (value: number) => {
   form.price = value
 }
 
 const onChangeNumORoomAvailable = (value: number) => {
-  form.numORoomAvailable = value
+  form.currentRoom = value
 }
 
 const onBack = () => {
@@ -535,22 +627,55 @@ const preHandleBeforeSubmit = () => {
   })
 }
 
+// const onSubmit = async () => {
+//   ui.isSubmitting = true
+//   try {
+//     if (form.title) {
+//       form.slug = toSlug(form.title)
+//     }
+
+//     const onlyFiles = form.photos.map((item) => item.file)
+//     if (onlyFiles.length > 0) {
+//       await uploadAll() // ✅ đợi upload xong rồi mới lưu
+//     }
+
+//     // gọi API lưu post khi đã có link ảnh
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     form.photos = form.photos.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
+//     const id = await addPost(form)
+//     if (id) {
+//       ElMessage({
+//         message: 'Thêm Tin đăng mới thành công!',
+//         type: 'success',
+//       })
+
+//       router.push({ name: 'PostList' })
+//     }
+//   } catch (error) {
+//     alert('Có lỗi xảy ra: ' + error)
+//   } finally {
+//     ui.isSubmitting = false
+//   }
+// }
+
 const onSubmit = async () => {
   ui.isSubmitting = true
   try {
-    if (form.nameAccommodation) {
-      form.slug = toSlug(form.nameAccommodation)
+    if (form.title) {
+      form.slug = toSlug(form.title)
     }
 
-    const onlyFiles = form.imageList.map((item) => item.file)
+    const onlyFiles = form.photos.map((item) => item.file)
     if (onlyFiles.length > 0) {
       await uploadAll() // ✅ đợi upload xong rồi mới lưu
     }
 
     // gọi API lưu post khi đã có link ảnh
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    form.imageList = form.imageList.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
-    const id = await addPost(form)
+    form.photos = form.photos.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
+    // const id = await addPost(form)
+    const id = await createPhongTro(form)
+
     if (id) {
       ElMessage({
         message: 'Thêm Tin đăng mới thành công!',
@@ -568,13 +693,13 @@ const onSubmit = async () => {
 
 // Cập nhật list ảnh
 const uploadAll = async () => {
-  const onlyFiles = form.imageList.map((item) => item.file)
+  const onlyFiles = form.photos.map((item) => item.file)
   console.log('onlyFiles00 :', onlyFiles)
 
   const uploadedPaths = await Promise.all(onlyFiles.map((file) => onUpload(file)))
 
-  // gán lại vào form.imageList
-  form.imageList = form.imageList.map((item, index) => ({
+  // gán lại vào form.photos
+  form.photos = form.photos.map((item, index) => ({
     ...item,
     imagePath: uploadedPaths[index], // link ảnh sau khi upload
   }))
