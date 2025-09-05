@@ -434,11 +434,11 @@ import {
   PROJECT_STATUS,
   FEATURED_STATUS,
 } from '../const'
-import { addPost } from './api'
+import { addPost, type CreatePostPayload } from './api'
 import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
 import { getTokenImage, uploadImage } from '@/apis/upload.ts'
-import { toSlug } from '@/utils/string'
+// import { toSlug } from '@/utils/string'
 import { createPhongTro } from './api'
 import { getProvinces, getWards } from '@/apis/province'
 
@@ -477,33 +477,33 @@ const ui = reactive({
   isLoadingWards: false,
 })
 
-interface ProjectForm {
-  title: string | null
-  totalRoom: number | null
-  square: number | null
-  ownerName: string | null
-  roomType: string | null
-  roomDirection: number | null
-  content: string | null
-  facility: number[]
-  price: number | null
-  houseNo: string | null // Thiếu
-  photos: any[]
-  latitude: number | null
-  longitude: number | null
-  deposit: number | null
-  status: number | null
-  adType: number | null
-  ownerPhone: number | null
-  currentRoom: number | null
-  slug: string | null
-  provinceId: string | null
-  districtId: string | null
-  wardId: string | null
-  streetId: string | null
-}
+// interface ProjectForm {
+//   title: string | null
+//   totalRoom: number | null
+//   square: number | null
+//   ownerName: string | null
+//   roomType: string | null
+//   roomDirection: number | null
+//   content: string | null
+//   facility: number[]
+//   price: number | null
+//   houseNo: string | null // Thiếu
+//   photos: any[]
+//   latitude: number | null
+//   longitude: number | null
+//   deposit: number | null
+//   // status: number | null
+//   adType: number | null
+//   ownerPhone: number | null
+//   currentRoom: number | null
+//   // slug: string | null
+//   provinceId: string | null
+//   districtId: string | null
+//   wardId: string | null
+//   streetId: string | null
+// }
 
-const form = reactive<ProjectForm>({
+const form = reactive<CreatePostPayload>({
   title: null,
   totalRoom: null,
   square: null,
@@ -517,11 +517,11 @@ const form = reactive<ProjectForm>({
   photos: [],
   latitude: null,
   longitude: null,
-  status: PROJECT_STATUS.APPROVED,
+  // status: PROJECT_STATUS.APPROVED,
   adType: FEATURED_STATUS.NORMAL,
   ownerPhone: null,
   currentRoom: null,
-  slug: null,
+  // slug: null,
   deposit: null,
   provinceId: null,
   districtId: '1',
@@ -679,9 +679,9 @@ const preHandleBeforeSubmit = () => {
 const onSubmit = async () => {
   ui.isSubmitting = true
   try {
-    if (form.title) {
-      form.slug = toSlug(form.title)
-    }
+    // if (form.title) {
+    //   form.slug = toSlug(form.title)
+    // }
 
     const onlyFiles = form.photos.map((item) => item.file)
     if (onlyFiles.length > 0) {
@@ -690,7 +690,9 @@ const onSubmit = async () => {
 
     // gọi API lưu post khi đã có link ảnh
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    form.photos = form.photos.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
+    // form.photos = form.photos.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
+    form.photos = form.photos.map((path) => path.fileName)
+
     // const id = await addPost(form)
     const id = await createPhongTro(form)
 
@@ -717,10 +719,10 @@ const uploadAll = async () => {
   const uploadedPaths = await Promise.all(onlyFiles.map((file) => uploadFileImg(file)))
 
   // gán lại vào form.photos
-  form.photos = form.photos.map((item, index) => ({
-    ...item,
-    imagePath: uploadedPaths[index], // link ảnh sau khi upload
-  }))
+  // form.photos = form.photos.map((item, index) => ({
+  //   ...item,
+  //   imagePath: uploadedPaths[index], // link ảnh sau khi upload
+  // }))
 }
 
 // const onUpload = async (image: File) => {

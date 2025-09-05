@@ -28,29 +28,29 @@ export async function addPost(project: Omit<any, 'id'>): Promise<string> {
 import api from '@/apis/axios'
 
 export interface CreatePostPayload {
-  title: string
-  content: string
-  square: string
-  price: string
-  deposit: string
-  provinceId: string
-  districtId: string
-  wardId: string
-  streetId: string
-  houseNo: string
-  ownerName: string
+  title: string | null
+  content: string | null
+  square: number | null
+  price: number | null
+  deposit: string | null
+  provinceId: string | null
+  districtId: string | null
+  wardId: string | null
+  streetId: string | null
+  houseNo: string | null
+  ownerName: string | null
 
-  ownerPhone: string
-  photos: string[]
-  totalRoom: string
-  currentRoom: string
-  roomType: string
-  roomDirection: string
-  adType: string
+  ownerPhone: string | null
+  photos: any[]
+  totalRoom: number | null
+  currentRoom: number | null
+  roomType: number | null
+  roomDirection: number | null
+  adType: number | null
 
-  latitude: string
-  longitude: string
-  facility: String[]
+  latitude: any | null
+  longitude: any | null
+  facility: number[]
 }
 
 export const createPhongTro = async (data: CreatePostPayload) => {
