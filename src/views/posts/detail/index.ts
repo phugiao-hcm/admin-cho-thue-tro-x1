@@ -4,7 +4,7 @@ const { project } = useBreadcrumb()
 
 router.addRoute({
   path: `/posts/detail`,
-  name: 'ProjectDetail',
+  name: 'PostDetail',
   meta: { requiresAuth: true },
   beforeEnter(to, from, next) {
     to.meta.breadcrumb = project.detail()

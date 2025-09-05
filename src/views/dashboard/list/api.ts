@@ -1,4 +1,4 @@
-import api from '@/plugins/axios'
+import api from '@/apis/axios'
 
 export interface User {
   id: number

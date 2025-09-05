@@ -34,3 +34,36 @@ export const getProjectById = async (id: string): Promise<Project | null> => {
     throw e
   }
 }
+
+// ==================================================
+// ==================================================
+// ==================================================
+// ==================================================
+// ==================================================
+// ==================================================
+// ==================================================
+// ==================================================
+
+import api from '@/apis/axios' // đường dẫn file api.ts của bạn
+
+// GET
+const getPhongTroDetail = async (id: number) => {
+  try {
+    const response = await api.get(`/api/v1/phongtro/getPhongTroDetail?id=${id}`)
+    console.log('Users:', response.data)
+  } catch (error) {
+    console.error('Fetch users failed:', error)
+  }
+}
+
+// POST
+const login = async (email: string, password: string) => {
+  try {
+    const response = await api.post('/login', { email, password })
+    console.log('Login success:', response.data)
+    // Lưu token vào localStorage
+    localStorage.setItem('token', response.data.token)
+  } catch (error) {
+    console.error('Login failed:', error)
+  }
+}

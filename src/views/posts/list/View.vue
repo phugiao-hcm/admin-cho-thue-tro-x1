@@ -62,12 +62,9 @@
             <p class="body-small-semi-bold neutral-500">Tiêu đề</p>
           </template>
           <template #default="scope">
-            <el-link
-              type="primary"
-              underline="never"
-              @click="onDirectProjectDetail(scope.row.id)"
-              >{{ scope.row.nameAccommodation }}</el-link
-            >
+            <el-link type="primary" underline="never" @click="onDirectPostDetail(scope.row.id)">{{
+              scope.row.nameAccommodation
+            }}</el-link>
           </template>
         </el-table-column>
         <el-table-column min-width="160">
@@ -239,8 +236,8 @@ const onProjectRemove = (row: any) => {
   dialogRef.value?.open(row)
 }
 
-const onDirectProjectDetail = (id: any) => {
-  router.push({ name: 'ProjectDetail', params: { id } })
+const onDirectPostDetail = (id: any) => {
+  router.push({ name: 'PostDetail', params: { id } })
 }
 </script>
 
