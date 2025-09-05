@@ -167,7 +167,7 @@ import { reactive, ref, onMounted } from 'vue'
 import type { FormItemProps, FormProps } from 'element-plus'
 import { useRouter } from 'vue-router'
 import Pagination from '@/components/global/PaginationMobile.vue'
-import { getPostList } from './api'
+import { getPosts } from './api'
 import { PROJECT_STATUS } from '../const'
 import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
 import { usePage } from '../mixin'
@@ -209,8 +209,7 @@ const handleCurrentChange = (value: any) => {
 const fetchPosts = async () => {
   try {
     ui.isLoading = true
-    tableData.value = await getPostList()
-    console.log('tableData :', tableData)
+    tableData.value = await getPosts(filter)
   } catch (e) {
     console.error(e)
   } finally {

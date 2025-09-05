@@ -1,7 +1,6 @@
-import { collection, getDocs, getFirestore } from 'firebase/firestore'
-import app from '@/plugins/firebaseConfig' // assuming default export is your FirebaseApp
+import api from '@/apis/axios'
 
-export interface Posts {
+export interface Post {
   id: string
   name: string
   location: string
@@ -10,13 +9,9 @@ export interface Posts {
   //   [key: string]: any     // nếu muốn thêm field linh hoạt
 }
 
-const db = getFirestore(app) // get Firestore instance from FirebaseApp
-
-export async function getPostList(): Promise<Posts[]> {
-  const querySnapshot = await getDocs(collection(db, 'posts'))
-
-  return querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Posts, 'id'>),
-  }))
+export async function getPosts(params: any): Promise<Post[]> {
+  const res = await api.get<Post[]>(
+    '/v1/phongtro/getPhongTroList?page=1&provinceId=1&districtId=1&wardId&streetId&price&square&areaId&facility=[]',
+  )
+  return res.data
 }

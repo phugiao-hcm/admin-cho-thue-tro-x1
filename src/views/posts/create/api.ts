@@ -27,7 +27,7 @@ export async function addPost(project: Omit<any, 'id'>): Promise<string> {
 
 import api from '@/apis/axios'
 
-export interface CreateUserPayload {
+export interface CreatePostPayload {
   title: string
   content: string
   square: string
@@ -53,6 +53,6 @@ export interface CreateUserPayload {
   facility: String[]
 }
 
-export const createPhongTro = async (data: CreateUserPayload) => {
+export const createPhongTro = async (data: CreatePostPayload) => {
   return await api.post('/v1/phongtro/createPhongTro', data)
 }

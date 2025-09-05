@@ -224,7 +224,7 @@
             <div>
               <el-form-item>
                 <el-input
-                  type="textsquare"
+                  type="textarea"
                   :placeholder="'Nhập mô tả ngắn gọn'"
                   v-model="form.content"
                   rows="5"
@@ -500,6 +500,7 @@ interface ProjectForm {
   provinceId: string | null
   districtId: string | null
   wardId: string | null
+  streetId: string | null
 }
 
 const form = reactive<ProjectForm>({
@@ -525,6 +526,7 @@ const form = reactive<ProjectForm>({
   provinceId: null,
   districtId: '1',
   wardId: null,
+  streetId: '1',
 })
 
 const rules: FormRules = {
@@ -563,7 +565,7 @@ const onChangeProvinceList = (provinceSn: number) => {
   getWardList(provinceSn)
 }
 
-const getTokenImage = async () => {
+const getTokenImg = async () => {
   try {
     tokenImage.value = await getTokenImage()
   } catch (e) {
@@ -573,7 +575,7 @@ const getTokenImage = async () => {
 
 const uploadFileImg = async (image: File) => {
   try {
-    const imageUpdated = await uploadImage(image)
+    const imageUpdated = await uploadImage(image, tokenImage.value)
     return imageUpdated
   } catch (e) {
     console.error(e)
@@ -583,7 +585,7 @@ const uploadFileImg = async (image: File) => {
 
 onMounted(() => {
   getProvinceList()
-  getTokenImage()
+  getTokenImg()
 })
 
 const setAsMain = (image?: any) => {

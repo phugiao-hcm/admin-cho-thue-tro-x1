@@ -137,7 +137,7 @@ import HaOffsetSection from '@/components/global/HaOffsetSection.vue'
 import { EditPen, CircleCloseFilled, Back } from '@element-plus/icons-vue'
 import GoogleMap from '@/components/global/GoogleMap.vue'
 import { ref, onMounted, reactive } from 'vue'
-import { getProjectById, type Project } from './api'
+import { getPhongTroDetail } from './api'
 import { usePage } from '../mixin'
 import PopupRemove from '../components/PopupRemove.vue'
 
@@ -200,7 +200,7 @@ const fetchPostDetail = async () => {
   try {
     ui.isLoading = true
     const id = route.params.id as string
-    project.value = await getProjectById(id)
+    project.value = await getPhongTroDetail(id)
   } catch (e) {
     console.error(e)
   } finally {

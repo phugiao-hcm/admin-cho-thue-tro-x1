@@ -20,12 +20,16 @@
 import axios from 'axios'
 
 export async function getTokenImage(): Promise<string> {
-  const res = await axios.post(`https://api.sirv.com/v2/token`)
+  const res = await axios.post(`https://api.sirv.com/v2/token`, {
+    clientId: '6ySLQOSG6TJaTRqhXGTw5jJ9Zu7',
+    clientSecret:
+      'ZjCCdsPqdCHDZr95wR7BJ0rw4iRSgvGcfl1xtQbJQv+MgSy8jp29pI1R3ceIAzGbg2nvU28OIZB3hS1lRPXcOQ==',
+  })
 
-  return res.data
+  return res.data.token
 }
 
-export async function uploadImage(file: File): Promise<string> {
+export async function uploadImage(file: File, tokenImage: string): Promise<string> {
   const formData = new FormData()
   formData.append('file', file)
 
@@ -33,7 +37,10 @@ export async function uploadImage(file: File): Promise<string> {
     `https://api.sirv.com/v2/files/upload?filename=/phongtro/2.jpg`,
     formData,
     {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${tokenImage}`, // truyền token vào đây
+      },
     },
   )
 
