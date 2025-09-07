@@ -1,7 +1,8 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import axios from 'axios'
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 
 const api: AxiosInstance = axios.create({
-  baseURL: 'https://api.kongricsstudio.com', // đổi thành API backend của bạn
+  baseURL: 'https://api.kongricsstudio.com/api', // đổi thành API backend của bạn
   timeout: 10000,
 })
 

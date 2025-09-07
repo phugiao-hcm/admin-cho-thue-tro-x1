@@ -1,33 +1,31 @@
-// import api from './apiCaller'
-
-// export async function uploadImage(file: File): Promise<string> {
-//   const formData = new FormData()
-//   formData.append('image', file)
-
-//   const res = await api.post('/upload', formData, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//     },
-//   })
-
-//   return res.data.url // secure_url từ server
-// }
-
 import axios from 'axios'
 
-const CLOUD_NAME = 'ds8q7doz2' // Lấy trong Dashboard
-const UPLOAD_PRESET = 'my_unsigned_preset' // Tạo trong bước 1
+export async function getTokenImage(): Promise<string> {
+  const res = await axios.post(`https://api.sirv.com/v2/token`, {
+    clientId: '6ySLQOSG6TJaTRqhXGTw5jJ9Zu7',
+    clientSecret:
+      'ZjCCdsPqdCHDZr95wR7BJ0rw4iRSgvGcfl1xtQbJQv+MgSy8jp29pI1R3ceIAzGbg2nvU28OIZB3hS1lRPXcOQ==',
+  })
 
-export async function uploadImage(file: File): Promise<string> {
-  const formData = new FormData()
-  formData.append('file', file)
-  formData.append('upload_preset', UPLOAD_PRESET)
+  return res.data.token
+}
 
-  const res = await axios.post(
-    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-    formData,
-    { headers: { 'Content-Type': 'multipart/form-data' } },
-  )
+export async function uploadImage(file: File, token: string) {
+  try {
+    const filename = `/phongtro/${file.name}`
+    const url = `https://api.sirv.com/v2/files/upload?filename=${encodeURIComponent(filename)}`
 
-  return res.data.secure_url // link ảnh
+    const res = await axios.post(url, file, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': file.type || 'application/octet-stream', // image/jpeg, image/png...
+      },
+    })
+
+    console.log('Upload thành công:', res.data)
+    return res.data
+  } catch (error) {
+    console.error('Upload thất bại:', error)
+    throw error
+  }
 }

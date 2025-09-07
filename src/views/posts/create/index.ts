@@ -3,8 +3,8 @@ import { useBreadcrumb } from '@/router/breadcrumb'
 const { project } = useBreadcrumb()
 
 router.addRoute({
-  path: `/posts/create`,
-  name: 'ProjectCreate',
+  path: `/post/create`,
+  name: 'PostCreate',
   meta: { requiresAuth: true },
   beforeEnter(to, from, next) {
     to.meta.breadcrumb = project.create()

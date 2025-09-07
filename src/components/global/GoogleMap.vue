@@ -2,6 +2,7 @@
     <div class="map-container">
         <!-- Input autocomplete -->
         <input
+            v-show="!isDisabled"
             ref="autocompleteInput"
             type="text"
             placeholder="Nhập địa chỉ..."
@@ -9,7 +10,7 @@
         />
 
         <!-- Input lat/lng -->
-        <div class="latlng-inputs">
+        <div v-show="!isDisabled" class="latlng-inputs">
             <input v-model.number="lat" type="number" step="0.000001" placeholder="Lat" />
             <input v-model.number="lng" type="number" step="0.000001" placeholder="Lng" />
             <el-button type="primary" @click="goToLatLng">Tìm</el-button>
@@ -21,16 +22,45 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useGoogleMaps } from '@/composables/useGoogleMaps'
 
 const apiKey = 'AIzaSyD2_kkzvfEJmLHoOV4ok9LfdoaNxTFcGac' // 🔑 thay bằng key thật
 
+const props = withDefaults(
+    defineProps<{
+        isDisabled?: boolean
+        lat?: number
+        lng?: number
+    }>(),
+    {
+        isDisabled: false,
+        lat: 11.233129,
+        lng: 106.732281,
+    }
+)
+
 const mapRef = ref<HTMLDivElement | null>(null)
 const autocompleteInput = ref<HTMLInputElement | null>(null)
 
-const lat = ref(11.233129) // mặc định
-const lng = ref(106.732281)
+const lat = ref(props.lat)
+const lng = ref(props.lng)
+
+watch(
+    () => [props.lat, props.lng],
+    ([newLat, newLng]) => {
+        if (newLat != null && newLng != null) {
+            lat.value = newLat
+            lng.value = newLng
+
+            if (map && marker) {
+                const location = { lat: newLat, lng: newLng }
+                map.setCenter(location)
+                marker.setPosition(location)
+            }
+        }
+    }
+)
 
 const { loadScript } = useGoogleMaps(apiKey)
 
