@@ -109,7 +109,9 @@
 
             <div class="custom-address">
                 <div>
-                    <p class="body-small-regular neutral-700">{{ post.address }}</p>
+                    <div class="mb-sm">
+                        <p class="body-small-regular neutral-700">{{ post.houseNo }}</p>
+                    </div>
                     <div class="mb-sm">
                         <p class="body-small-regular neutral-500">Tên chủ thuê</p>
                         <p class="body-small-semi-bold neutral-800">{{ post.authorName }}</p>
