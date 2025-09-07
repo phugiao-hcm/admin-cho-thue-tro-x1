@@ -1,22 +1,3 @@
-// import axios from 'axios'
-
-// const CLOUD_NAME = 'ds8q7doz2' // Lấy trong Dashboard
-// const UPLOAD_PRESET = 'my_unsigned_preset' // Tạo trong bước 1
-
-// export async function uploadImage(file: File): Promise<string> {
-//   const formData = new FormData()
-//   formData.append('file', file)
-//   formData.append('upload_preset', UPLOAD_PRESET)
-
-//   const res = await axios.post(
-//     `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-//     formData,
-//     { headers: { 'Content-Type': 'multipart/form-data' } },
-//   )
-
-//   return res.data.secure_url // link ảnh
-// }
-
 import axios from 'axios'
 
 export async function getTokenImage(): Promise<string> {
@@ -29,20 +10,22 @@ export async function getTokenImage(): Promise<string> {
   return res.data.token
 }
 
-export async function uploadImage(file: File, tokenImage: string): Promise<string> {
-  const formData = new FormData()
-  formData.append('file', file)
+export async function uploadImage(file: File, token: string) {
+  try {
+    const filename = `/phongtro/${file.name}`
+    const url = `https://api.sirv.com/v2/files/upload?filename=${encodeURIComponent(filename)}`
 
-  const res = await axios.post(
-    `https://api.sirv.com/v2/files/upload?filename=/phongtro/2.jpg`,
-    formData,
-    {
+    const res = await axios.post(url, file, {
       headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${tokenImage}`, // truyền token vào đây
+        Authorization: `Bearer ${token}`,
+        'Content-Type': file.type || 'application/octet-stream', // image/jpeg, image/png...
       },
-    },
-  )
+    })
 
-  return res.data
+    console.log('Upload thành công:', res.data)
+    return res.data
+  } catch (error) {
+    console.error('Upload thất bại:', error)
+    throw error
+  }
 }

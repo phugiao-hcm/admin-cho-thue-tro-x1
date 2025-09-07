@@ -1,14 +1,25 @@
-import axios from 'axios'
-
-export async function getProvinces(): Promise<string> {
-  const res = await axios.get(`https://provinces.open-api.vn/api/v2/p/`)
-
-  return res.data
+import api from '@/apis/axios'
+export interface Province {
+  id: number
+  name: string
 }
 
-export async function getWards(provinceSn: number): Promise<string> {
-  const res = await axios.get(`
-  https://provinces.open-api.vn/api/v2/p/${provinceSn}?depth=2`)
+export interface ApiResponse<T> {
+  code: number
+  message: string
+  error: string | null
+  data: T
+  timestamp: number
+}
 
-  return res.data.wards
+export async function getProvinces(): Promise<{ res: Province[] }> {
+  const res = await api.get<ApiResponse<Province[]>>('/v1/suggestion/getProvinceList')
+  return { res: res.data } // chỉ lấy mảng data
+}
+
+export async function getWards(provinceId: number): Promise<{ res: Province[] }> {
+  const res = await api.get<ApiResponse<Province[]>>(
+    `/v1/suggestion/getWardList?provinceId=${provinceId}`,
+  )
+  return { res: res.data } // chỉ lấy mảng data
 }

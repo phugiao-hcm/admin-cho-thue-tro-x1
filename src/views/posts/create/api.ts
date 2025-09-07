@@ -34,9 +34,7 @@ export interface CreatePostPayload {
   price: number | null
   deposit: string | null
   provinceId: string | null
-  districtId: string | null
   wardId: string | null
-  streetId: string | null
   houseNo: string | null
   ownerName: string | null
 

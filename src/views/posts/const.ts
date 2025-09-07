@@ -12,6 +12,7 @@ export const TYPE_ROOM = {
   DormitoryRoom: 4, // Phòng ký túc xá (dorm): giường tầng, ở ghép, giá rẻ nhất, thường cho sinh viên hoặc công nhân.
   MiniApartment: 5, // Chung cư mini: dạng căn hộ nhỏ, đầy đủ tiện nghi, có thể 1PN hoặc 2PN.
   HouseForRent: 6, // Nhà nguyên căn cho thuê: phù hợp nhóm bạn, hộ gia đình, hoặc người thuê lâu dài.
+  HomeStay: 7, // Căn hộ cho thuê
 } as const
 
 export const TYPE_ROOM_OPTIONS = [
@@ -21,6 +22,7 @@ export const TYPE_ROOM_OPTIONS = [
   { label: 'Phòng ký túc xá (dorm)', value: TYPE_ROOM.DormitoryRoom },
   { label: 'Chung cư mini', value: TYPE_ROOM.MiniApartment },
   { label: 'Nhà nguyên căn cho thuê', value: TYPE_ROOM.HouseForRent },
+  { label: 'Căn hộ', value: TYPE_ROOM.HomeStay },
 ]
 
 export const DIRECTION_ROOM = {

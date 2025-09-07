@@ -3,7 +3,7 @@ import { useBreadcrumb } from '@/router/breadcrumb'
 const { project } = useBreadcrumb()
 
 router.addRoute({
-  path: `/posts/list`,
+  path: `/post/list`,
   name: 'PostList',
   // meta: { requiresAuth: true },
   beforeEnter(to, from, next) {
