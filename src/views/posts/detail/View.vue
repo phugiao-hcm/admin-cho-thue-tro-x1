@@ -121,7 +121,15 @@
                     </div>
                 </div>
                 <div>
-                    <GoogleMap :center="center" :zoom="12" height="400px" width="100%" />
+                    <GoogleMap
+                        :is-disabled="true"
+                        :center="center"
+                        :lat="center.lat"
+                        :lng="center.lng"
+                        :zoom="12"
+                        height="400px"
+                        width="100%"
+                    />
                 </div>
             </div>
         </div>
@@ -168,7 +176,7 @@ const ui = reactive({
 })
 
 const post = ref<any>([])
-const center = reactive({ lat: 10.762622, lng: 106.660172 })
+const center = ref<any>({})
 
 const fetchPostDetail = async () => {
     try {
@@ -176,6 +184,11 @@ const fetchPostDetail = async () => {
         const id = route.query.id as string
         const { res } = await getPhongTroDetail(id)
         post.value = res.data // chỉ lấy danh sách
+
+        center.value = {
+            lat: post.value.latitude,
+            lng: post.value.longitude,
+        }
     } catch (e) {
         console.error(e)
     } finally {

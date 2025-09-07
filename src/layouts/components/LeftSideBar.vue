@@ -1,6 +1,6 @@
 <template>
     <div class="left-section-sidebar">
-        <div class="flex-between custom-logo" style="padding: 12px">
+        <div class="flex-between custom-logo" style="padding: 14px">
             <div class="flex-center">
                 <img class="logo-big" src="@/assets/images/png/favicon-32x32.png" />
                 <p v-if="isOpenMenu" class="body-small-medium">Admin Trọ Đây Rồi</p>
@@ -94,7 +94,6 @@ const props = defineProps<{
     isOpenMenu: boolean
 }>()
 
-// const isOpenMenu = ref(false)
 // khai báo emit
 const emit = defineEmits<{
     (e: 'collapsed'): void

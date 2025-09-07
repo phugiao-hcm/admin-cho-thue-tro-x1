@@ -211,7 +211,7 @@
                     <div class="custom-card">
                         <div>
                             <p class="body-small-regular neutral-700">
-                                Địa chỉ
+                                Địa chỉ (số nhà)
                                 <span class="secondary-red-600">*</span>
                             </p>
                         </div>
@@ -254,7 +254,7 @@
                     </p>
                 </div>
                 <div class="flex-right mobile-mt-sm">
-                    <div class="custom-card">
+                    <!-- <div class="custom-card">
                         <div>
                             <p class="body-small-regular neutral-700">Loại tin đăng</p>
                             <div>
@@ -266,7 +266,7 @@
                                 </el-radio-group>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="custom-card">
                         <div>
@@ -393,6 +393,7 @@
                             <div class="w-100">
                                 <el-form-item prop="provinceId">
                                     <el-select
+                                        filterable
                                         :loading="ui.isLoadingProvinces"
                                         class="w-100"
                                         v-model="form.provinceId"
@@ -414,6 +415,7 @@
                             <div class="w-100">
                                 <el-form-item prop="wardId">
                                     <el-select
+                                        filterable
                                         :loading="ui.isLoadingRoomBed"
                                         class="w-100"
                                         v-model="form.wardId"
@@ -456,7 +458,7 @@ import {
     PROJECT_STATUS,
     FEATURED_STATUS,
 } from '../const'
-import { addPost, type CreatePostPayload } from './api'
+import { type CreatePostPayload } from './api'
 import { useUI } from '@/mixins/globalMixin'
 import GoogleMapWithAutocomplete from '@/components/global/GoogleMap.vue'
 import { getTokenImage, uploadImage } from '@/apis/upload.ts'
@@ -465,7 +467,6 @@ import { createPhongTro } from './api'
 import { getProvinces, getWards } from '@/apis/province'
 
 const router = useRouter()
-// const { generateRandomSuffix, onResetValidateField, validateRequired } = useUI()
 const { generateRandomSuffix, onResetValidateField, validateRequired } = useUI()
 
 // Wrap validateRequired to callback style for async-validator
@@ -476,11 +477,27 @@ const validateRequiredCallback = (rule: any, value: any, callback: any) => {
 }
 
 const validateNumberRequiredCallback = (rule: any, value: any, callback: any) => {
-    if (!value) throw new Error('Không bỏ trống')
+    if (!value) {
+        callback(new Error('Không bỏ trống'))
+    } else {
+        callback()
+    }
 }
 
 const validateOptionRequiredCallback = (rule: any, value: any, callback: any) => {
-    if (!value || value.length === 0) throw new Error('Không bỏ trống')
+    if (!value || value.length === 0) {
+        callback(new Error('Không bỏ trống'))
+    } else {
+        callback()
+    }
+}
+
+const validateImagesRequiredCallback = (rule: any, value: any, callback: any) => {
+    if (!form.photos || form.photos.length === 0) {
+        callback(new Error('Không bỏ trống'))
+    } else {
+        callback()
+    }
 }
 
 // refs
@@ -515,11 +532,8 @@ const form = reactive<CreatePostPayload>({
     photos: [],
     latitude: null,
     longitude: null,
-    // status: PROJECT_STATUS.APPROVED,
-    adType: FEATURED_STATUS.NORMAL,
     ownerPhone: null,
     currentRoom: null,
-    // slug: null,
     deposit: null,
     provinceId: null,
     wardId: null,
@@ -534,9 +548,9 @@ const rules: FormRules = {
     price: [{ validator: validateNumberRequiredCallback, trigger: ['blur'] }],
     houseNo: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
     facility: [{ validator: validateOptionRequiredCallback, trigger: ['blur', 'change'] }],
-    provinceId: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    wardId: [{ validator: validateRequiredCallback, trigger: ['blur'] }],
-    photos: [{ validator: validateOptionRequiredCallback, trigger: ['blur', 'change'] }],
+    provinceId: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
+    wardId: [{ validator: validateRequiredCallback, trigger: ['blur', 'change'] }],
+    photos: [{ validator: validateImagesRequiredCallback, trigger: ['blur', 'change'] }],
     roomDirection: [{ validator: validateOptionRequiredCallback, trigger: ['blur', 'change'] }],
     roomType: [{ validator: validateOptionRequiredCallback, trigger: ['blur', 'change'] }],
 }
@@ -591,14 +605,6 @@ onMounted(() => {
     getTokenImg()
 })
 
-// const setAsMain = (image?: any) => {
-//     form.photos.forEach((img: any) => (img.firstDisplay = 0))
-//     if (image) image.firstDisplay = 1
-//     if (!form.photos.some((img: any) => img.firstDisplay === 1) && form.photos.length > 0) {
-//         form.photos[0].firstDisplay = 1
-//     }
-// }
-
 const resultThumbnail = (result: File) => {
     const newImage = {
         file: result,
@@ -619,7 +625,6 @@ const deleteImage = (image: any) => {
 }
 
 const onRefreshImage = () => {
-    // setAsMain()
     cropperFixedRef.value?.resetImage()
 }
 
@@ -642,39 +647,39 @@ const onBack = () => {
 }
 
 const preHandleBeforeSubmit = () => {
+    console.log('preHandleBeforeSubmit')
+
     formRef.value?.validate((valid) => {
+        console.log('zzzz', valid)
         if (!valid) return
         onSubmit()
     })
 }
 
 const onSubmit = async () => {
+    console.log('onSubmit')
+
     ui.isSubmitting = true
     try {
-        // if (form.title) {
-        //   form.slug = toSlug(form.title)
-        // }
+        console.log('onSubmit IN')
 
         const onlyFiles = form.photos.map((item) => item.file)
         if (onlyFiles.length > 0) {
             await uploadAll() // ✅ đợi upload xong rồi mới lưu
         }
+        console.log('onSubmit IN 2')
 
         // gọi API lưu post khi đã có link ảnh
-
-        // form.photos = form.photos.map(({ file, ...rest }) => rest) // Bỏ file khi gửi lên database
-        // form.photos = form.photos.map((path) => path.fileName)
         form.photos = form.photos.map((path) => path.file.name)
 
-        // const id = await addPost(form)
         const id = await createPhongTro(form)
+        console.log('onSubmit IN 3')
 
         if (id) {
             ElMessage({
                 message: 'Thêm Tin đăng mới thành công!',
                 type: 'success',
             })
-
             router.push({ name: 'PostList' })
         }
     } catch (error) {
@@ -689,15 +694,6 @@ const uploadAll = async () => {
     const onlyFiles = form.photos.map((item) => item.file)
     await Promise.all(onlyFiles.map((file) => uploadFileImg(file)))
 }
-// const uploadAll = async () => {
-//     // Lấy cả file và fileName từ form.photos
-//     const filesWithName = form.photos.map((item) => ({
-//         file: item.file,
-//         fileName: item.fileName,
-//     }))
-
-//     await Promise.all(filesWithName.map(({ file, fileName }) => uploadFileImg(file, fileName)))
-// }
 
 const handleLocation = (location: { lat: number; lng: number }) => {
     form.latitude = location.lat
