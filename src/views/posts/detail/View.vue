@@ -142,7 +142,7 @@
             </div>
 
             <div>
-                <p class="body-small-regular neutral-700">{{ post.content }}</p>
+                <p style="white-space: pre-line; line-height: 1.625" v-html="post.content"></p>
             </div>
         </div>
 
