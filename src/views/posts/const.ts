@@ -13,6 +13,7 @@ export const TYPE_ROOM = {
   MiniApartment: 5, // Chung cư mini: dạng căn hộ nhỏ, đầy đủ tiện nghi, có thể 1PN hoặc 2PN.
   HouseForRent: 6, // Nhà nguyên căn cho thuê: phù hợp nhóm bạn, hộ gia đình, hoặc người thuê lâu dài.
   HomeStay: 7, // Căn hộ cho thuê
+  Kiot: 8, // Kiot cho thuê
 } as const
 
 export const TYPE_ROOM_OPTIONS = [
@@ -23,6 +24,7 @@ export const TYPE_ROOM_OPTIONS = [
   { label: 'Chung cư mini', value: TYPE_ROOM.MiniApartment },
   { label: 'Nhà nguyên căn cho thuê', value: TYPE_ROOM.HouseForRent },
   { label: 'Căn hộ', value: TYPE_ROOM.HomeStay },
+  { label: 'Kiot', value: TYPE_ROOM.Kiot },
 ]
 
 export const DIRECTION_ROOM = {
