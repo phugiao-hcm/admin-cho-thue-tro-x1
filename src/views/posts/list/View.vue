@@ -4,13 +4,26 @@
             <p class="body-large-semi-bold neutral-700">Danh sách Tin đăng</p>
 
             <div class="flex-center">
-                <div>
+                <el-select
+                    v-model="filter.status"
+                    placeholder="Select"
+                    style="width: 240px"
+                    @change="onSearch"
+                >
+                    <el-option
+                        v-for="item in statusOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    />
+                </el-select>
+                <!-- <div>
                     <el-input
                         v-model="filter.keyword"
                         style="width: 240px"
                         placeholder="Nhập tìm kiếm..."
                     />
-                </div>
+                </div> -->
                 <div>
                     <el-button type="primary" @click="onDirectProjectCreate"
                         >Tạo Tin đăng</el-button
@@ -85,38 +98,16 @@
                         </p>
                     </template>
                 </el-table-column>
-                <!-- <el-table-column min-width="160" align="center" fixed="right">
+                <el-table-column min-width="160" align="center" fixed="right">
                     <template #default="scope">
-                        <el-popover placement="left-start" :width="200" trigger="click">
-                            <template #reference>
-                                <el-button type="primary" plain>Thao tác</el-button>
-                            </template>
-
-                            <div class="el-popover_item">
-                                <div>
-                                    <el-button
-                                        link
-                                        type="primary"
-                                        @click="onDirectProjectEdit(scope.row.status)"
-                                    >
-                                        <el-icon><EditPen /></el-icon>
-                                        <span>Chỉnh sửa</span>
-                                    </el-button>
-                                </div>
-                                <div>
-                                    <el-button
-                                        link
-                                        type="danger"
-                                        @click="onProjectRemove(scope.row)"
-                                    >
-                                        <el-icon><CircleCloseFilled /></el-icon>
-                                        <span>Ngừng kinh doanh</span>
-                                    </el-button>
-                                </div>
-                            </div>
-                        </el-popover>
+                        <div v-if="filter.status === 2">
+                            <el-button type="primary" @click="onPostAccept(scope.row)">
+                                <el-icon><CircleCheck /></el-icon>
+                                <span>Duyệt</span>
+                            </el-button>
+                        </div>
                     </template>
-                </el-table-column> -->
+                </el-table-column>
             </el-table>
 
             <!-- <Pagination
@@ -129,7 +120,7 @@
         </div>
 
         <!-- =================== -->
-        <PopupRemove ref="dialogRef" />
+        <PopupAccept ref="dialogRef" @onSuccess="fetchPosts" />
         <!-- =================== -->
     </HaSection>
 </template>
@@ -143,12 +134,12 @@ import { useRouter } from 'vue-router'
 import Pagination from '@/components/global/PaginationMobile.vue'
 import { getPosts, type PostFilter } from './api'
 import { PROJECT_STATUS } from '../const'
-import { EditPen, CircleCloseFilled } from '@element-plus/icons-vue'
+import { EditPen, CircleCheck } from '@element-plus/icons-vue'
 import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
 import { useUI } from '@/mixins/globalMixin'
 const { formatPrice } = useUI()
-import PopupRemove from '../components/PopupRemove.vue'
+import PopupAccept from '../components/PopupAccept.vue'
 
 const router = useRouter()
 
@@ -158,6 +149,13 @@ const ui = reactive({
     isLoading: false,
 })
 
+const statusOptions = [
+    { label: 'Hoạt động', value: 1 },
+    { label: 'Chờ duyệt', value: 2 },
+    { label: 'Hết hạn', value: 3 },
+    { label: 'Bị từ chối', value: 4 },
+]
+
 // const filter = reactive({
 //     page: 1,
 //     limit: 10,
@@ -166,6 +164,7 @@ const ui = reactive({
 const filter: PostFilter = {
     page: 1,
     provinceId: 28,
+    status: 1,
     // limit: 10,
     // keyword: '',
     // wardId: null,
@@ -199,6 +198,10 @@ const fetchPosts = async () => {
     }
 }
 
+const onSearch = () => {
+    fetchPosts()
+}
+
 onMounted(() => {
     fetchPosts()
 })
@@ -215,6 +218,11 @@ const onDirectProjectCreate = () => {
 // const onProjectRemove = (row: any) => {
 //     dialogRef.value?.open(row)
 // }
+
+const dialogRef = ref<any>(null)
+const onPostAccept = (row: any) => {
+    dialogRef.value?.open(row)
+}
 
 const onDirectPostDetail = (id: any) => {
     router.push({ name: 'PostDetail', query: { id: id } })
