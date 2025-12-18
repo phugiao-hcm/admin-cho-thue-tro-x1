@@ -4,4 +4,5 @@ export const initRouter = async function () {
   await import('./reviews')
   await import('./services')
   await import('./users')
+  await import('./news')
 }

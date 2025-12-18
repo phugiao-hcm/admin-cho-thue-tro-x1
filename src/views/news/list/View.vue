@@ -1,7 +1,7 @@
 <template>
   <HaSection>
     <div class="flex-between" style="margin: 16px 0">
-      <p class="body-large-semi-bold neutral-700">Danh sách Tin đăng</p>
+      <p class="body-large-semi-bold neutral-700">Danh sách Tin tức</p>
 
       <div class="flex-center">
         <el-select
@@ -17,15 +17,8 @@
             :value="item.value"
           />
         </el-select>
-        <!-- <div>
-                    <el-input
-                        v-model="filter.keyword"
-                        style="width: 240px"
-                        placeholder="Nhập tìm kiếm..."
-                    />
-                </div> -->
         <div>
-          <el-button type="primary" @click="onDirectProjectCreate">Tạo Tin đăng</el-button>
+          <el-button type="primary" @click="onDirectNewsCreate">Tạo Tin tức</el-button>
         </div>
       </div>
     </div>
@@ -59,19 +52,9 @@
             }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column min-width="160">
-          <template #header>
-            <p class="body-small-semi-bold neutral-500">Giá (/1 phòng)</p>
-          </template>
-          <template #default="scope">
-            <p class="body-small-regular neutral-600">
-              {{ formatPrice(scope.row.price) }}
-            </p>
-          </template>
-        </el-table-column>
         <el-table-column min-width="220">
           <template #header>
-            <p class="body-small-semi-bold neutral-500">Tỉnh/Thành phố</p>
+            <p class="body-small-semi-bold neutral-500">Danh mục tin</p>
           </template>
           <template #default="scope">
             <p class="body-small-regular neutral-600">
@@ -81,7 +64,7 @@
         </el-table-column>
         <el-table-column min-width="220">
           <template #header>
-            <p class="body-small-semi-bold neutral-500">Xã/Quận</p>
+            <p class="body-small-semi-bold neutral-500">Mô tả ngắn (meta description)</p>
           </template>
           <template #default="scope">
             <p class="body-small-regular neutral-600">
@@ -100,14 +83,6 @@
           </template>
         </el-table-column>
       </el-table>
-
-      <!-- <Pagination
-                v-show="tableData.length !== 0"
-                ref="paginationRef"
-                :pageSizes="[10, 20, 30, 50]"
-                @changePageSize="handleSizeChange"
-                @changeCurrentPage="handleCurrentChange"
-            /> -->
     </div>
 
     <!-- =================== -->
@@ -124,7 +99,6 @@ import type { FormItemProps, FormProps } from 'element-plus'
 import { useRouter } from 'vue-router'
 import Pagination from '@/components/global/PaginationMobile.vue'
 import { getPosts, type PostFilter } from './api'
-import { PROJECT_STATUS } from '../const'
 import { EditPen, CircleCheck } from '@element-plus/icons-vue'
 import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
@@ -147,33 +121,11 @@ const statusOptions = [
   { label: 'Bị từ chối', value: 4 },
 ]
 
-// const filter = reactive({
-//     page: 1,
-//     limit: 10,
-//     keyword: '',
-// })
 const filter: PostFilter = {
   page: 1,
   provinceId: 28,
   status: 1,
-  // limit: 10,
-  // keyword: '',
-  // wardId: null,
-  // price: null,
-  // areaId: null,
 }
-
-// const handleSizeChange = (value: any) => {
-//     filter.page = 1
-//     filter.limit = value
-//     if (filter.page === 1) {
-//         fetchPosts()
-//     }
-// }
-// const handleCurrentChange = (value: any) => {
-//     filter.page = value
-//     fetchPosts()
-// }
 
 const fetchPosts = async () => {
   try {
@@ -197,18 +149,9 @@ onMounted(() => {
   fetchPosts()
 })
 
-const onDirectProjectCreate = () => {
-  router.push({ name: 'PostCreate' })
+const onDirectNewsCreate = () => {
+  router.push({ name: 'NewsCreate' })
 }
-
-// const onDirectProjectEdit = (value: number) => {
-//     console.log('onDirectProjectEdit :', value)
-// }
-
-// const dialogRef = ref<any>(null)
-// const onProjectRemove = (row: any) => {
-//     dialogRef.value?.open(row)
-// }
 
 const dialogRef = ref<any>(null)
 const onPostAccept = (row: any) => {
