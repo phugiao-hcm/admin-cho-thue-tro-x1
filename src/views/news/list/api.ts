@@ -37,10 +37,9 @@ export interface PostFilter {
   // limit?: number
   // keyword?: string
 }
-
-export async function getPosts(filter: PostFilter): Promise<{ res: PostResponse }> {
+export async function getNews(filter: PostFilter): Promise<{ res: PostResponse }> {
   const res = await api.get<PostResponse>(
-    `/v1/phongtro/getPhongTroList?page=1&provinceId=${filter.provinceId ?? ''}&wardId=${filter.wardId ?? ''}&price=${filter.price ?? ''}&square=${filter.square ?? ''}&areaId=${filter.areaId ?? ''}&status=${filter.status ?? ''}`,
+    `/v1/phongtro/getPhongTroNewsList?page=1&provinceId=${filter.provinceId ?? ''}&wardId=${filter.wardId ?? ''}&price=${filter.price ?? ''}&square=${filter.square ?? ''}&areaId=${filter.areaId ?? ''}&status=${filter.status ?? ''}`,
   )
   return { res: res.data } // bọc vào key `res`
 }
