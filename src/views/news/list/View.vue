@@ -1,94 +1,77 @@
 <template>
-  <HaSection>
-    <div class="flex-between" style="margin: 16px 0">
-      <p class="body-large-semi-bold neutral-700">Danh sách Tin tức</p>
+    <HaSection>
+        <div class="flex-between" style="margin: 16px 0">
+            <p class="body-large-semi-bold neutral-700">Danh sách Tin tức</p>
 
-      <div class="flex-center">
-        <el-select
-          v-model="filter.status"
-          placeholder="Select"
-          style="width: 240px"
-          @change="onSearch"
-        >
-          <el-option
-            v-for="item in statusOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <div>
-          <el-button type="primary" @click="onDirectNewsCreate">Tạo Tin tức</el-button>
-        </div>
-      </div>
-    </div>
-
-    <div class="el-table-outer">
-      <el-table
-        v-loading="ui.isLoading"
-        :data="tableData"
-        :header-cell-style="{
-          background: '#F9FAFB',
-          borderBottom: '1px solid #D0D5DD',
-          paddingTop: '10px',
-          paddingBottom: '10px',
-        }"
-      >
-        <el-table-column min-width="130">
-          <template #header>
-            <p class="body-small-semi-bold neutral-500">Ảnh đại diện</p>
-          </template>
-          <template #default="scope">
-            <el-image :src="scope.row?.thumbnail || ''" style="width: 100px" fit="cover" />
-          </template>
-        </el-table-column>
-        <el-table-column min-width="220">
-          <template #header>
-            <p class="body-small-semi-bold neutral-500">Tiêu đề</p>
-          </template>
-          <template #default="scope">
-            <el-link type="primary" underline="never" @click="onDirectPostDetail(scope.row.id)">{{
-              scope.row.title
-            }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column min-width="220">
-          <template #header>
-            <p class="body-small-semi-bold neutral-500">Danh mục tin</p>
-          </template>
-          <template #default="scope">
-            <p class="body-small-regular neutral-600">
-              {{ scope.row.provinceName }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column min-width="220">
-          <template #header>
-            <p class="body-small-semi-bold neutral-500">Mô tả ngắn (meta description)</p>
-          </template>
-          <template #default="scope">
-            <p class="body-small-regular neutral-600">
-              {{ scope.row.wardName }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column min-width="160" align="center" fixed="right">
-          <template #default="scope">
-            <div v-if="filter.status === 2">
-              <el-button type="primary" @click="onPostAccept(scope.row)">
-                <el-icon><CircleCheck /></el-icon>
-                <span>Duyệt</span>
-              </el-button>
+            <div class="flex-center">
+                <div>
+                    <el-button type="primary" @click="onDirectNewsCreate">Tạo Tin tức</el-button>
+                </div>
             </div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+        </div>
 
-    <!-- =================== -->
-    <PopupAccept ref="dialogRef" @onSuccess="fetchPosts" />
-    <!-- =================== -->
-  </HaSection>
+        <div class="el-table-outer">
+            <el-table
+                v-loading="ui.isLoading"
+                :data="tableData"
+                :header-cell-style="{
+                    background: '#F9FAFB',
+                    borderBottom: '1px solid #D0D5DD',
+                    paddingTop: '10px',
+                    paddingBottom: '10px',
+                }"
+            >
+                <el-table-column min-width="130">
+                    <template #header>
+                        <p class="body-small-semi-bold neutral-500">Ảnh đại diện</p>
+                    </template>
+                    <template #default="scope">
+                        <el-image
+                            :src="scope.row?.featuredImage || ''"
+                            style="width: 100px"
+                            fit="cover"
+                        />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="220">
+                    <template #header>
+                        <p class="body-small-semi-bold neutral-500">Tiêu đề</p>
+                    </template>
+                    <template #default="scope">
+                        <p class="body-small-regular neutral-600">
+                            {{ scope.row.title }}
+                        </p>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="220">
+                    <template #header>
+                        <p class="body-small-semi-bold neutral-500">
+                            Mô tả ngắn (meta description)
+                        </p>
+                    </template>
+                    <template #default="scope">
+                        <p class="body-small-regular neutral-600">
+                            {{ scope.row.content }}
+                        </p>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="160" align="center" fixed="right">
+                    <template #default="scope">
+                        <div v-if="filter.status === 2">
+                            <el-button type="primary" @click="onPostAccept(scope.row)">
+                                <el-icon><CircleCheck /></el-icon>
+                                <span>Duyệt</span>
+                            </el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+
+        <!-- =================== -->
+        <PopupAccept ref="dialogRef" @onSuccess="fetchPosts" />
+        <!-- =================== -->
+    </HaSection>
 </template>
 
 
@@ -98,7 +81,7 @@ import { reactive, ref, onMounted } from 'vue'
 import type { FormItemProps, FormProps } from 'element-plus'
 import { useRouter } from 'vue-router'
 import Pagination from '@/components/global/PaginationMobile.vue'
-import { getPosts, type PostFilter } from './api'
+import { getNews, type PostFilter } from './api'
 import { EditPen, CircleCheck } from '@element-plus/icons-vue'
 import { usePage } from '../mixin'
 const { setStatus, setTypeStatus } = usePage()
@@ -111,63 +94,59 @@ const router = useRouter()
 const tableData = ref<any>([])
 
 const ui = reactive({
-  isLoading: false,
+    isLoading: false,
 })
 
 const statusOptions = [
-  { label: 'Hoạt động', value: 1 },
-  { label: 'Chờ duyệt', value: 2 },
-  { label: 'Hết hạn', value: 3 },
-  { label: 'Bị từ chối', value: 4 },
+    { label: 'Hoạt động', value: 1 },
+    { label: 'Chờ duyệt', value: 2 },
+    { label: 'Hết hạn', value: 3 },
+    { label: 'Bị từ chối', value: 4 },
 ]
 
 const filter: PostFilter = {
-  page: 1,
-  provinceId: 28,
-  status: 1,
+    page: 1,
+    provinceId: 28,
+    status: 1,
 }
 
 const fetchPosts = async () => {
-  try {
-    ui.isLoading = true
-    const { res } = await getPosts(filter)
-    tableData.value = res.data?.phongTroList // chỉ lấy danh sách
+    try {
+        ui.isLoading = true
+        const { res } = await getNews(filter)
+        tableData.value = res.data?.phongTroNewsList
 
-    console.log('tableData :', res)
-  } catch (e) {
-    console.error(e)
-  } finally {
-    ui.isLoading = false
-  }
+        console.log('tableData :', res)
+    } catch (e) {
+        console.error(e)
+    } finally {
+        ui.isLoading = false
+    }
 }
 
 const onSearch = () => {
-  fetchPosts()
+    fetchPosts()
 }
 
 onMounted(() => {
-  fetchPosts()
+    fetchPosts()
 })
 
 const onDirectNewsCreate = () => {
-  router.push({ name: 'NewsCreate' })
+    router.push({ name: 'NewsCreate' })
 }
 
 const dialogRef = ref<any>(null)
 const onPostAccept = (row: any) => {
-  dialogRef.value?.open(row)
-}
-
-const onDirectPostDetail = (id: any) => {
-  router.push({ name: 'PostDetail', query: { id: id } })
+    dialogRef.value?.open(row)
 }
 </script>
 
 
 <style lang="scss" scoped>
 .el-popover_item {
-  div {
-    margin: 4px 0;
-  }
+    div {
+        margin: 4px 0;
+    }
 }
 </style>

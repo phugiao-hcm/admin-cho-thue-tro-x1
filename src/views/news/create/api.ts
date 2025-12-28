@@ -2,12 +2,11 @@ import api from '@/apis/axios'
 
 export interface CreatePostPayload {
   title: string | null
-  shortDescription: string | null
+  description: string | null
   content: string | null
-  photos: any[]
-  categoryId: number | null
+  featured_image: object | null
 }
 
-export const createPhongTro = async (data: CreatePostPayload) => {
-  return await api.post('/v1/phongtro/createPhongTro', data)
+export const createPhongTroNews = async (data: CreatePostPayload) => {
+  return await api.post('/v1/phongtro/createPhongTroNews', data)
 }
