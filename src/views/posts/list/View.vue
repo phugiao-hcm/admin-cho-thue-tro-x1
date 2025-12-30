@@ -146,6 +146,7 @@ import { useUI } from '@/mixins/globalMixin'
 const { formatPrice } = useUI()
 import PopupAccept from '../components/PopupAccept.vue'
 import { ElMessage } from 'element-plus'
+import { decodeId, encodeId } from '@/utils/idHash'
 
 const router = useRouter()
 
@@ -234,11 +235,23 @@ const onDirectPostDetail = (id: any) => {
     router.push({ name: 'PostDetail', query: { id: id } })
 }
 
-const onPostCopyLink = (row: any) => {
-    ElMessage({
-        message: `Đã sao chép link: ${window.location.origin}/posts/token=abc123&id=${row.id}`,
-        type: 'success',
-    })
+const onPostCopyLink = async (row: any) => {
+    const phongTroId = encodeId(row.id)
+    const link = `https://phugiao-hcm.github.io/customer-nha-cho-thue/${phongTroId}`
+
+    try {
+        await navigator.clipboard.writeText(link)
+
+        ElMessage({
+            message: `Đã sao chép link: ${link}`,
+            type: 'success',
+        })
+    } catch (err) {
+        ElMessage({
+            message: 'Không thể sao chép link',
+            type: 'error',
+        })
+    }
 }
 </script>
 
